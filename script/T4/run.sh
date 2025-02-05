@@ -21,7 +21,7 @@ pushd /home/3/uy02093/workspace/IRM_Extrapolation
 PYTHON_ARGS=$@
 
 # ======== Execution ========
-CMD="python -m train.py ${PYTHON_ARGS}"
+CMD="python -m train ${PYTHON_ARGS}"
 echo $CMD
 eval $CMD
 
