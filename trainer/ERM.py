@@ -39,7 +39,7 @@ def train(
         for data_iter in data_iters:
             iter_num += 1
             try:
-                images, labels = data_iter.next()
+                images, labels = next(data_iter)
             except StopIteration:
                 stop_flag = True
                 break

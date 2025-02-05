@@ -41,6 +41,7 @@ SHELL_ARGS="--dataset ${DATASET} \
             --warm_start ${WARM_START} \
             --omega_lr ${OMEGA_LR} \
             --print_freq ${PRINT_FREQ} \
+            --wandb_project_name ${WANDB_PROJECT_NAME} \
             "
 
 CMD="qsub -g tge-24IJ0078 run.sh ${SHELL_ARGS}"

@@ -43,7 +43,7 @@ def train(
         batch_num = 0
         for env_num, data_iter in enumerate(data_iters):
             try:
-                images, labels = data_iter.next()
+                images, labels = next(data_iter)
             except StopIteration:
                 stop_flag = True
                 break
