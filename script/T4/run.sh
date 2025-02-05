@@ -17,7 +17,7 @@ export WANDB_API_KEY="412e8240b034b61dae066dfd1b3714cdde7e535e"
 
 
 # ======== Configuration ========
-pushd /home/3/uy02093/workspace/ColoredObjects_IRM
+pushd /home/3/uy02093/workspace/IRM_Extrapolation
 PYTHON_ARGS=$@
 
 # ======== Execution ========

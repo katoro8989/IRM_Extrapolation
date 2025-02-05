@@ -21,8 +21,8 @@ PRINT_FREQ=100
 RESULT_DIR="./results"
 GPU="0"
 NO_CUDA=""
+WANDB_PROJECT_NAME="IRM_debag"
 
-# 例として、上記の変数を利用して SHELL_ARGS を組み立てる
 SHELL_ARGS="--dataset ${DATASET} \
             --epochs ${EPOCHS} \
             --batch_size ${BATCH_SIZE} \
