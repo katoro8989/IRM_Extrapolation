@@ -39,12 +39,6 @@ def train(
         envs = [{} for _ in data_iters]
         iter_num += 1
         batch_num = 0
-
-        images_full = []
-        labels_full = []
-
-        torch.autograd.set_detect_anomaly(True)
-
         for env_num, data_iter in enumerate(data_iters):
             try:
                 images, labels = data_iter.next()
@@ -56,66 +50,50 @@ def train(
 
             images = images.to(device)
             labels = labels.to(device)
-
-            images_full.append(images)
-            labels_full.append(labels)
-
-            omega_logits = model(images, env_num=env_num)
-            omega_loss = criterion(omega_logits, labels)
-
-            optimizer[env_num].zero_grad()
-            omega_loss.backward()
-            optimizer[env_num].step()
-            scheduler[env_num].step()
-
-        if stop_flag:
-            break
-
-        for env_num, (images, labels) in enumerate(zip(images_full, labels_full)):
-
-            # model.average_omega()
-            model.clear_phi_grad()
-            logits = model(images, env_num=env_num)
+            logits = model(images)
             loss = criterion(logits, labels)
 
             envs[env_num]["loss"] = loss
             envs[env_num]["penalty_v1"] = penalty_v1(logits, labels)
-            envs[env_num]["penalty_v0"] = penalty_v0(model, images, labels, env_num)
+            envs[env_num]["penalty_v0"] = penalty_v0(model, images, labels)
             envs[env_num]["penalty_stationary"] = penalty_stationary(model, images, labels, 0)
             envs[env_num]["acc"] = mean_accuracy(logits, labels)
 
+        if stop_flag:
+            break
+
         training_loss = torch.stack([env["loss"] for env in envs]).mean()
         training_acc = torch.stack([env["acc"] for env in envs]).mean()
-        penalty_v1_loss = torch.stack([env["penalty_v1"] for env in envs]).mean()
+        penalty_v1_tensor = torch.stack([env["penalty_v1"] for env in envs])
+        penalty_v1_loss = penalty_v1_tensor.mean()
         penalty_v0_loss = torch.stack([env["penalty_v0"] for env in envs]).mean()
         penalty_stationary_loss = torch.stack([env["penalty_stationary"] for env in envs]).mean()
+        penalty_v_v1 = (1 - args.var_beta) * penalty_v1_loss + args.var_beta * penalty_v1_tensor.var()
 
         loss = torch.tensor(0.0).to(device)
 
         # Training loss
         loss += training_loss
-        # acc1 = mean_accuracy(logits, labels)
 
-        model.clear_phi_grad()
-
+        # Weight Decay
         weight_norm = torch.tensor(0.).to(device)
         for w in model.parameters():
             weight_norm += w.norm().pow(2)
-        weight_norm = args.wd * weight_norm
+        loss += args.wd * weight_norm
 
-        loss += weight_norm
-
-        loss += penalty_weight * penalty_stationary_loss
+        # Invariance Penalty
+        loss += penalty_weight * penalty_v_v1
         if penalty_weight > 1.0:
-            # Rescale the entire loss to keep gradients in a reasonable range
             loss /= penalty_weight
 
-        optimizer[-1].zero_grad()
+        # Model Parameter Update
+        optimizer.zero_grad()
         loss.backward()
-        optimizer[-1].step()
-        scheduler[-1].step()
+        optimizer.step()
+        scheduler.step()
 
-        losses.update(loss.item(), batch_num)
+        # Update Statistics
+        losses.update(training_loss.item(), batch_num)
         top1.update(training_acc.item(), batch_num)
         penalty_v1_losses.update(penalty_v1_loss.item() * penalty_weight, batch_num)
         penalty_v0_losses.update(penalty_v0_loss.item() * penalty_weight, batch_num)
@@ -124,9 +102,11 @@ def train(
         batch_time.update(time.time() - end)
         end = time.time()
 
+        # Display
         if iter_num % args.print_freq == 0:
             progress.display(iter_num)
 
-        model.average_omega()
-
     return [top1.avg, losses.avg, penalty_v0_losses.avg, penalty_v1_losses.avg, penalty_stationary_losses.avg, reg_losses.avg]
+
+
+

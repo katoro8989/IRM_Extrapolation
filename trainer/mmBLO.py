@@ -88,7 +88,9 @@ def train(
         training_acc = torch.stack([env["acc"] for env in envs]).mean()
         penalty_v1_loss = torch.stack([env["penalty_v1"] for env in envs]).mean()
         penalty_v0_loss = torch.stack([env["penalty_v0"] for env in envs]).mean()
-        penalty_stationary_loss = torch.stack([env["penalty_stationary"] for env in envs]).mean()
+        penalty_stationary_tensor = torch.stack([env["penalty_stationary"] for env in envs])
+        penalty_stationary_loss = penalty_stationary_tensor.mean()
+        penalty_v_stationary = (1 - args.alpha_mm * len(envs)) * penalty_stationary_tensor.max() + args.alpha_mm * penalty_stationary_tensor.sum()
 
         loss = torch.tensor(0.0).to(device)
 
@@ -105,7 +107,7 @@ def train(
 
         loss += weight_norm
 
-        loss += penalty_weight * penalty_stationary_loss
+        loss += penalty_weight * penalty_v_stationary
         if penalty_weight > 1.0:
             # Rescale the entire loss to keep gradients in a reasonable range
             loss /= penalty_weight
