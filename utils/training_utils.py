@@ -100,17 +100,17 @@ def penalty_stationary(model, x, y, env_num):
     return torch.sum(grad.view(-1) ** 2)
 
 
-def get_maxprob_and_onehot(probs: numpy.ndarray, labels: numpy.ndarray) -> Tuple[numpy.ndarray, numpy.ndarray]:
+def get_maxprob_and_onehot(probs: np.ndarray, labels: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
 
     maxprob_list = []
     idx_list = []
 
     for i in range(len(probs)):
-        maxprob_list.append(numpy.max(probs[i]))
-        idx_list.append(numpy.argmax(probs[i]))
+        maxprob_list.append(np.max(probs[i]))
+        idx_list.append(np.argmax(probs[i]))
 
-    maxprob_list = numpy.array(maxprob_list)
-    idx_list = numpy.array(idx_list)
+    maxprob_list = np.array(maxprob_list)
+    idx_list = np.array(idx_list)
     one_hot_labels = labels == idx_list
 
     return  maxprob_list, one_hot_labels
