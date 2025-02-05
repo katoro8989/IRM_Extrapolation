@@ -124,7 +124,7 @@ class Bottleneck(nn.Module):
 class ResNet(nn.Module):
     def __init__(self, block, layers, num_classes=1000, zero_init_residual=False,
                  groups=1, width_per_group=64, replace_stride_with_dilation=None,
-                 norm_layer=None):
+                 norm_layer=None, env_num=1):
         super(ResNet, self).__init__()
         if norm_layer is None:
             norm_layer = nn.BatchNorm2d
@@ -154,10 +154,27 @@ class ResNet(nn.Module):
         self.layer4 = self._make_layer(block, 512, layers[3], stride=2,
                                        dilate=replace_stride_with_dilation[2])
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
+
+        self.phi = nn.Sequential(
+            self.conv1,
+            self.bn1,
+            self.relu,
+            self.maxpool,
+            self.layer1,
+            self.layer2,
+            self.layer3,
+            self.layer4,
+            self.avgpool,
+            nn.Flatten(start_dim=1)
+        )
+
         num_classes = 1
         self.num_classes = 1
-        self.class_classifier = nn.Linear(512 * block.expansion, num_classes)
-        self.sep=False
+        self.omega_list = []
+        self.env_num = env_num
+        for env in range(env_num):
+            omega = nn.Linear(512 * block.expansion, num_classes)
+            self.omega_list.append(omega)
 
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
@@ -197,100 +214,77 @@ class ResNet(nn.Module):
 
         return nn.Sequential(*layers)
 
-    def encoder(self, x):
-        # See note [TorchScript super()]
-        x = self.conv1(x)
-        x = self.bn1(x)
-        x = self.relu(x)
-        x = self.maxpool(x)
-
-        x = self.layer1(x)
-        x = self.layer2(x)
-        x = self.layer3(x)
-        x = self.layer4(x)
-
-        x = self.avgpool(x)
-        x = torch.flatten(x, 1)
-
-        return x
-
     def forward(self, x):
 
         x = self.encoder(x)
         self.fp = x
         return self.class_classifier(x)
 
-    def sep_param_id(self):
-        sep_params = [
-            p[1] for p
-            in self.named_parameters()
-            if 'classifier' in p[0] and
-                'sep' in p[0]]
-        sep_param_id = [id(i) for i in sep_params]
-        return sep_param_id
+    def forward(self, input, env_num=0):
+        out = self.phi(input)
+        if env_num < 0:
+            return out
+        out = self.omega_list[env_num](out)
+        return out
+    
+    def load_device(self, device):
+        self.phi = self.phi.to(device)
+        for omega in self.omega_list:
+            omega = omega.to(device)
 
-    def rep_param_id(self):
-        rep_param_id = [
-            id(p) for p in self.parameters()
-            if id(p) not in  self.sep_param_id()
-                and id(p) not in self.share_param_id()]
-        return rep_param_id
+    def get_omega_reg(self, requires_grad=True):
+        if requires_grad:
+            for omega in self.omega_list:
+                omega.requires_grad_(True)
+        res = 0
+        if self.env_num < 1:
+            return res
+        for i in range(self.env_num - 1):
+            res += (ptv(self.omega_list[i].parameters()) - ptv(self.omega_list[i + 1].parameters())).norm(p=2)
+        return res ** 0.5
 
-    def get_optimizer_schedule(self, args):
-        if args.irm_penalty_weight > 0:
-            if args.opt == "Adam":
-                opt_fun = optim.Adam
-                optimizer_rep = opt_fun(
-                    filter(lambda p:id(p) in self.rep_param_id(), self.parameters()),
-                    lr=args.lr)
-                optimizer_share = opt_fun(
-                    filter(lambda p:id(p) in self.share_param_id(), self.parameters()),
-                    lr=args.lr* args.penalty_wlr)
-                optimizer_sep = optim.SGD(
-                    filter(lambda p:id(p) in self.sep_param_id(), self.parameters()),
-                    lr=args.lr* args.penalty_welr)
-            elif args.opt == "SGD":
-                opt_fun = optim.SGD
-                optimizer_rep = opt_fun(
-                    filter(lambda p:id(p) in self.rep_param_id(), self.parameters()),
-                    momentum=0.9,
-                    lr=args.lr)
-                optimizer_share = opt_fun(
-                    filter(lambda p:id(p) in self.share_param_id(), self.parameters()),
-                    momentum=args.w_momentum,
-                    lr=args.lr * args.penalty_wlr)
-                optimizer_sep = opt_fun(
-                    filter(lambda p:id(p) in self.sep_param_id(), self.parameters()),
-                    momentum=args.w_momentum,
-                    lr=args.lr * args.penalty_welr)
+    def average_omega(self):
+        sum_param = None
+        for omega in self.omega_list:
+            if sum_param is not None:
+                sum_param += ptv(omega.parameters())
             else:
-                raise Exception
-            if args.lr_schedule_type == "step":
-                print("step_gamma=%s" % args.step_gamma)
-                scheduler_rep = lr_scheduler.StepLR(optimizer_rep, step_size=int(args.n_epochs/2.5), gamma=args.step_gamma)
-                scheduler_sep = lr_scheduler.StepLR(optimizer_sep, step_size=int(args.n_epochs), gamma=args.step_gamma)
-                scheduler_share = lr_scheduler.StepLR(optimizer_share, step_size=int(args.n_epochs/2.5), gamma=args.step_gamma)
+                sum_param = ptv(omega.parameters())
+        avg_param = sum_param / len(self.omega_list)
 
-            return [optimizer_rep, optimizer_share, optimizer_sep], [scheduler_rep, scheduler_share, scheduler_sep]
-        else:
-            if args.opt == "Adam":
-                opt_fun = optim.Adam
-                optimizer= opt_fun(
-                    filter(lambda p:id(p) in self.rep_param_id(), self.parameters()),
-                    lr=args.lr)
-            elif args.opt == "SGD":
-                opt_fun = optim.SGD
-                optimizer= opt_fun(
-                    filter(lambda p:id(p) in self.rep_param_id(), self.parameters()),
-                    momentum=0.9,
-                    lr=args.lr)
-            else:
-                raise Exception
-            scheduler= lr_scheduler.StepLR(
-                optimizer,
-                step_size=int(args.n_epochs/3.),
-                gamma=args.step_gamma)
-            return [optimizer], [scheduler]
+        for omega in self.omega_list:
+            vtp(avg_param, omega.parameters())
+
+    def clear_phi_grad(self):
+        for param in self.phi.parameters():
+            param.grad = None
+            param.requires_grad_(True)
+        # self.phi.requires_grad_(True)
+
+    def clear_omega_grad(self):
+        for omega in self.omega_list:
+            for param in omega.parameters():
+                param.grad = None
+                param.requires_grad_(True)
+
+    def turn_on_phi_grad(self):
+        for param in self.phi:
+            param.requires_grad_(True)
+
+    def shut_down_phi_grad(self):
+        self.phi.requires_grad_(False)
+
+    def shut_down_all_omega_grad(self):
+        for omega in self.omega_list:
+            for param in omega.parameters():
+                param.grad = None
+                param.requires_grad_(True)
+
+    def shut_down_omega_grad(self, env_num):
+        omega = self.omega_list[env_num]
+        for param in omega.parameters():
+            param.grad = None
+            param.requires_grad_(True)
 
 
 
@@ -330,10 +324,26 @@ class ResNetUS(ResNet):
         self.layer4 = self._make_layer(block, 512, layers[3], stride=2,
                                        dilate=replace_stride_with_dilation[2])
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
-        # num_classes = 1
+
+        self.phi = nn.Sequential(
+            self.conv1,
+            self.bn1,
+            self.relu,
+            self.maxpool,
+            self.layer1,
+            self.layer2,
+            self.layer3,
+            self.layer4,
+            self.avgpool,
+            nn.Flatten(start_dim=1)
+        )
+
         self.num_classes = num_classes
-        # self.fc = nn.Linear(512 * block.expansion, num_classes)
-        self.class_classifier = nn.Linear(512 * block.expansion, num_classes)
+        self.omega_list = []
+        self.env_num = env_num
+        for env in range(env_num):
+            omega = nn.Linear(512 * block.expansion, num_classes)
+            self.omega_list.append(omega)
 
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
