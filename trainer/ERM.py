@@ -1,5 +1,6 @@
 import time
 import torch
+import numpy as np
 
 from utils.general_utils import AverageMeter, ProgressMeter
 from utils.training_utils import criterion, penalty_v1, penalty_stationary, mean_accuracy
