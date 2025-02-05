@@ -1,20 +1,51 @@
-SHELL_ARGS="--l2_regularizer_weight=0.001 \
-            --lr 0.001 \
-            --batch_size=512 \
-            --penalty_anneal_iter=80 \
-            --opt=sgd \
-            --print_every=1 \
-            --penalty_weight=0 \
-            --steps=1000  \
-            --step_gamma=0.1 \
-            --dataset=ColoredObject \
-            --irm_type=irmv1_vrex \
-            --var_beta=0. \
-            --min_alpha=-1. \
-            --wandb_project_name=ColoredObject_erm_v2 \
-            --wandb_entity_name=katoro13 \
+DATASET="ColoredObject"
+EPOCHS=200
+BATCH_SIZE=512
+SEED=2020
+ARCH="MLP390"
+TRAINER="IRM"
+DATA_DIR="/gs/bs/tge-24IJ0078/dataset"
+HIDDEN_DIM=390
+OPTIM="adam"
+TRAINING_ENV="0.1 0.2"
+TRAINING_CLASS_ENV=""
+TRAINING_COLOR_ENV=""
+TEST_ENV=0.9
+LABEL_FLIP_P=0.25
+WD=0.00110794568
+PENALTY_WEIGHT=91257.18613115903
+LR=0.002
+WARM_START=10
+OMEGA_LR=0.002
+PRINT_FREQ=100
+RESULT_DIR="./results"
+GPU="0"
+NO_CUDA=""
+
+# 例として、上記の変数を利用して SHELL_ARGS を組み立てる
+SHELL_ARGS="--dataset ${DATASET} \
+            --epochs ${EPOCHS} \
+            --batch_size ${BATCH_SIZE} \
+            --seed ${SEED} \
+            --arch ${ARCH} \
+            --trainer ${TRAINER} \
+            --data_dir ${DATA_DIR} \
+            --hidden-dim ${HIDDEN_DIM} \
+            --optim ${OPTIM} \
+            --save \
+            --training_env ${TRAINING_ENV} \
+            --training_class_env ${TRAINING_CLASS_ENV} \
+            --training_color_env ${TRAINING_COLOR_ENV} \
+            --test_env ${TEST_ENV} \
+            --label_flip_p ${LABEL_FLIP_P} \
+            --wd ${WD} \
+            --penalty_weight ${PENALTY_WEIGHT} \
+            --lr ${LR} \
+            --warm_start ${WARM_START} \
+            --omega_lr ${OMEGA_LR} \
+            --print_freq ${PRINT_FREQ} \
             "
-            
+
 CMD="qsub -g tge-24IJ0078 run.sh ${SHELL_ARGS}"
 echo "Exp-$((count + 1)): ${CMD}"
 eval $CMD
