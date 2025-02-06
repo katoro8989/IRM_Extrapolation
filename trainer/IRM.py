@@ -3,7 +3,7 @@ import torch
 import numpy as np
 
 from utils.general_utils import AverageMeter, ProgressMeter
-from utils.training_utils import criterion, penalty_v1, mean_accuracy, penalty_stationary, penalty_v0, calc_ece_ace get_maxprob_and_onehot
+from utils.training_utils import criterion, penalty_v1, mean_accuracy, penalty_stationary, penalty_v0, calc_ece_ace, get_maxprob_and_onehot
 
 def train(
         model, args, device, train_loaders, optimizer, scheduler, epoch
