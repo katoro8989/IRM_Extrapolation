@@ -260,8 +260,8 @@ def get_test_acc_ece_ace(model, test_env_loader, device):
     total = 0
     correct = 0
 
-    labels_all = []
-    logits_all = []
+    ece_list = []
+    ace_list = []
 
     for (images, labels) in test_env_loader:
         images = images.to(device)
@@ -270,29 +270,19 @@ def get_test_acc_ece_ace(model, test_env_loader, device):
         logits = model(images)
         _, predicted = torch.max(logits, 1)
         correct += (predicted == labels.view(-1)).sum()
-        labels_all.append(labels)
-        logits_all.append(logits)
 
-    #calc calibration metirics
-    ece_config = {}
-    ece_config['num_reps'] = 100
-    ece_config['norm'] = 1
-    ece_config['ce_type'] = 'em_ece_bin'
-    ece_config['num_bins'] = 10
+        #calc calibration metirics
+        ece_config = {}
+        ece_config['num_reps'] = 100
+        ece_config['norm'] = 1
+        ece_config['ce_type'] = 'em_ece_bin'
+        ece_config['num_bins'] = 10
+        ece, ace = calc_ece_ace(ece_config, logits, labels)
+        ece_list.append(ece)
+        ace_list.append(ace)
 
-    #ensure lavel is one hot
-    all_probs = np.array(logits)
-    all_labels = np.array(labels)
-    maxprob_list, one_hot_labels = get_maxprob_and_onehot(all_probs, all_labels)
-    ece_config['num_samples'] = int(len(one_hot_labels))
-
-    #calc ece
-    ece_config['ce_type'] = 'ew_ece_bin'
-    ece = calc_ece(ece_config, maxprob_list, one_hot_labels)
-
-    #calc ace
-    ece_config['ce_type'] = 'em_ece_bin'
-    ace = calc_ece(ece_config, maxprob_list, one_hot_labels)
+    ece = torch.tensor(ece_list).mean()
+    ace = torch.tensor(ace_list).mean
 
     accuracy = correct / total
 

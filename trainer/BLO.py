@@ -2,7 +2,7 @@ import time
 import torch
 
 from utils.general_utils import AverageMeter, ProgressMeter
-from utils.training_utils import criterion, penalty_v1, mean_accuracy, penalty_stationary, penalty_v0, calc_ece, get_maxprob_and_onehot
+from utils.training_utils import criterion, penalty_v1, mean_accuracy, penalty_stationary, penalty_v0, calc_ece_ace get_maxprob_and_onehot
 
 
 def train(
@@ -93,7 +93,7 @@ def train(
             ece_config['norm'] = 1
             ece_config['ce_type'] = 'em_ece_bin'
             ece_config['num_bins'] = 10
-            envs[env_num]["ece"], envs[env_num]["ace"] = calc_ece_ace(ece_config, maxprob_list, one_hot_labels)
+            envs[env_num]["ece"], envs[env_num]["ace"] = calc_ece_ace(ece_config, logits, labels)
 
         training_loss = torch.stack([env["loss"] for env in envs]).mean()
         training_acc = torch.stack([env["acc"] for env in envs]).mean()
