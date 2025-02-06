@@ -3,7 +3,7 @@ import torch
 import numpy as np
 
 from utils.general_utils import AverageMeter, ProgressMeter
-from utils.training_utils import criterion, penalty_v1, mean_accuracy, penalty_stationary, penalty_v0, calc_ece_ace, get_maxprob_and_onehot
+from utils.training_utils import criterion, penalty_v1, mean_accuracy, penalty_stationary, penalty_v0, calc_ece_ace, get_maxprob_and_onehot, init_config
 
 
 def train(
@@ -89,7 +89,7 @@ def train(
             envs[env_num]["acc"] = mean_accuracy(logits, labels)
 
             #calc calibration metirics
-            ece_config = {}
+            ece_config = init_config()
             ece_config['num_reps'] = 100
             ece_config['norm'] = 1
             ece_config['ce_type'] = 'em_ece_bin'

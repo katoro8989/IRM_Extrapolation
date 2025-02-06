@@ -101,6 +101,30 @@ def penalty_stationary(model, x, y, env_num):
         param.requires_grad_(True)
     return torch.sum(grad.view(-1) ** 2)
 
+def init_config():
+    """Initializer of Configration for CalibrationMetric."""
+
+    n_bins = 10
+    alpha = 1.0
+    beta = 1.0
+    config = {}
+    config['num_reps'] = 100
+    config['num_bins'] = n_bins
+    config['split'] = ''
+    config['norm'] = 1
+    config['calibration_method'] = 'no_calibration'
+    config['bin_method'] = ''
+    config['d'] = 1
+    config['alpha'] = alpha
+    config['beta'] = beta
+    config['a'] = alpha
+    config['b'] = beta
+    config['dataset'] = 'polynomial'
+    config['ce_type'] = 'ew_ece_bin'
+    config['num_samples'] = 5
+    
+    return config
+
 
 def get_maxprob_and_onehot(probs: np.ndarray, labels: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
 
@@ -273,7 +297,7 @@ def get_test_acc_ece_ace(model, test_env_loader, device):
         correct += (predicted == labels.view(-1)).sum()
 
         #calc calibration metirics
-        ece_config = {}
+        ece_config = init_config()
         ece_config['num_reps'] = 100
         ece_config['norm'] = 1
         ece_config['ce_type'] = 'em_ece_bin'
