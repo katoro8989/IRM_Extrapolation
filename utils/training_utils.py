@@ -161,10 +161,10 @@ def calc_ece_ace(config, tensor_logits, tensor_labels):
 
     config['num_samples'] = int(len(one_hot_labels))
 
-    def _ece(config, probs, labels):
+    def _ece(config, probs, labels_oneh):
         saved_ece = []
         for _ in range(config['num_reps']):
-            ce = calibrate(config, preds, labels_oneh)
+            ce = calibrate(config, probs, labels_oneh)
             saved_ece.append(ce)
         ece = np.mean(saved_ece)
 
