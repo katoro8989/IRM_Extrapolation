@@ -85,19 +85,6 @@ def main():
 
         test_accuracy, test_ece, test_ace = get_test_acc_ece_ace(model, test_loader, device)
 
-        if is_best:
-            torch.save(
-                {
-                    "training_stat": train_stat,
-                    "acc": acc,
-                    "all_res": test_accuracy
-                },
-                os.path.join(result_sub_dir, "trajectory.pt")
-            )
-
-        get_data_per_epoch(data_per_epoch, train_stat, acc)
-
-
         wandb.log({
             "epoch": epoch,
             "train_loss": train_stat[1],
