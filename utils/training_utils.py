@@ -197,9 +197,11 @@ def calc_ece_ace(config, tensor_logits, tensor_labels):
 
     config['ce_type'] = 'ew_ece_bin'
     ece = _ece(config, maxprobs, one_hot_labels)
+    ece = torch.tensor(ece)
 
     config['ce_type'] = 'em_ece_bin'
     ace = _ece(config, maxprobs, one_hot_labels)
+    ace = torch.tensor(ace)
 
 
     return ece, ace
