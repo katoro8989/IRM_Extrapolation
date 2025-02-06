@@ -74,7 +74,7 @@ def train(
             if iter_num % args.print_freq == 0:
                 progress.display(iter_num)
 
-    return [top1.avg, losses.avg, penalty_v0_losses.avg, penalty_v1_losses.avg, penalty_stationary_losses.avg, reg_losses.avg, ece.avg, ace.avg]
+    return [top1.avg, losses.avg, penalty_v0_losses.avg, penalty_v1_losses.avg, penalty_stationary_losses.avg, reg_losses.avg, eces.avg, aces.avg]
 
 
 

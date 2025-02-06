@@ -147,4 +147,4 @@ def train(
 
         model.average_omega()
 
-    return [top1.avg, losses.avg, penalty_v0_losses.avg, penalty_v1_losses.avg, penalty_stationary_losses.avg, reg_losses.avg, ece.avg, ace.avg]
+    return [top1.avg, losses.avg, penalty_v0_losses.avg, penalty_v1_losses.avg, penalty_stationary_losses.avg, reg_losses.avg, eces.avg, aces.avg]
