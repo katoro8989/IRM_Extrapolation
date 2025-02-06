@@ -143,6 +143,9 @@ def calibrate(config, preds, labels_oneh):
     """
 
     num_samples = config['num_samples']
+    print("num_samples: ", num_samples)
+    print("preds shape: ", preds.shape)
+    print("labels_oneh shape: ", labels_oneh.shape)
     scores = preds.reshape((num_samples, 1))
     raw_labels = labels_oneh.reshape((num_samples, 1))
 
@@ -169,6 +172,9 @@ def calc_ece_ace(config, tensor_logits, tensor_labels):
         ece = np.mean(saved_ece)
 
         return ece
+
+    print("preds shape: ", maxprobs.shape)
+    print("labels_oneh shape: ", one_hot_labels.shape)
 
     config['ce_type'] = 'ew_ece_bin'
     ece = _ece(config, maxprobs, one_hot_labels)
