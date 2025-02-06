@@ -94,20 +94,7 @@ def train(
             ece_config['norm'] = 1
             ece_config['ce_type'] = 'em_ece_bin'
             ece_config['num_bins'] = 10
-
-            #ensure lavel is one hot
-            all_probs = np.array(logits)
-            all_labels = np.array(labels)
-            maxprob_list, one_hot_labels = get_maxprob_and_onehot(all_probs, all_labels)
-            ece_config['num_samples'] = int(len(one_hot_labels))
-
-            #calc ece
-            ece_config['ce_type'] = 'ew_ece_bin'
-            envs[env_num]["ece"] = calc_ece(ece_config, maxprob_list, one_hot_labels)
-
-            #calc ace
-            ece_config['ce_type'] = 'em_ece_bin'
-            envs[env_num]["ace"] = calc_ece(ece_config, maxprob_list, one_hot_labels)
+            envs[env_num]["ece"], envs[env_num]["ace"] = calc_ece_ace(ece_config, maxprob_list, one_hot_labels)
 
         training_loss = torch.stack([env["loss"] for env in envs]).mean()
         training_acc = torch.stack([env["acc"] for env in envs]).mean()

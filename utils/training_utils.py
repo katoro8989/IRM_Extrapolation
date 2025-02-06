@@ -8,6 +8,8 @@ from typing import Tuple
 import numpy as np
 
 from utils.optim_utils import LARS
+from utils.calibration_metrics import CalibrationMetric
+
 
 
 def get_optimizer_scheduler(model, args):
@@ -115,23 +117,67 @@ def get_maxprob_and_onehot(probs: np.ndarray, labels: np.ndarray) -> Tuple[np.nd
 
     return  maxprob_list, one_hot_labels
 
-def calc_ece(config, preds, labels_oneh):
-    """ A helper function to compute ECE.
+def build_calibration_metric(config):
+    """Builder of CalibrationMetric."""
+
+    if config == None:
+        config = init_config()
+
+    ce_type = config['ce_type']
+    num_bins = config['num_bins']
+    bin_method = config['bin_method']
+    norm = config['norm']
+
+    # [4] Call CalibrationMetric constructor
+    cm = CalibrationMetric(ce_type, num_bins, bin_method, norm)
+    return cm
+
+def calibrate(config, preds, labels_oneh):
+    """Compute estimated calibration error.
         Args:
             config: configration dict
             pred: prediction score (fx)
             labels_oneh: one hot label (y)
         Return:
-            ece: estimated (mean) calibration error by using config['ce_type'] strategy
+            ce: calibration error by using config['ce_type'] strategy
     """
 
-    saved_ece = []
-    for _ in range(config['num_reps']):
+    num_samples = config['num_samples']
+    scores = preds.reshape((num_samples, 1))
+    raw_labels = labels_oneh.reshape((num_samples, 1))
 
-        ce = calibrate(config, preds, labels_oneh)
-        saved_ece.append(ce)
-    ece = np.mean(saved_ece)
-    return ece
+    # [3] Call build_calibration_metric function
+    cm = build_calibration_metric(config)
+    ce = cm.compute_error(scores, raw_labels)
+
+    return 100 * ce
+
+def calc_ece_ace(config, tensor_logits, tensor_labels):
+    probs = torch.nn.functional.softmax(tensor_logits, dim=1)
+    labels = tensor_labels.detach().cpu().numpy()
+    probs = tensor_logits.detach().cpu().numpy()
+
+    maxprobs, one_hot_labels = get_maxprob_and_onehot(probs, labels)
+
+    config['num_samples'] = int(len(one_hot_labels))
+
+    def _ece(config, probs, labels):
+        saved_ece = []
+        for _ in range(config['num_reps']):
+            ce = calibrate(config, preds, labels_oneh)
+            saved_ece.append(ce)
+        ece = np.mean(saved_ece)
+
+        return ece
+
+    config['ce_type'] = 'ew_ece_bin'
+    ece = _ece(config, maxprobs, one_hot_labels)
+
+    config['ce_type'] = 'em_ece_bin'
+    ace = _ece(config, maxprobs, one_hot_labels)
+
+
+    return ece, ace
 
 
 
