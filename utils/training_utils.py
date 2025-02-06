@@ -113,6 +113,7 @@ def get_maxprob_and_onehot(probs: np.ndarray, labels: np.ndarray) -> Tuple[np.nd
 
     maxprob_list = np.array(maxprob_list)
     idx_list = np.array(idx_list)
+    labels = labels.reshape(-1)
     one_hot_labels = labels == idx_list
 
     return  maxprob_list, one_hot_labels
@@ -143,9 +144,6 @@ def calibrate(config, preds, labels_oneh):
     """
 
     num_samples = config['num_samples']
-    print("num_samples: ", num_samples)
-    print("preds shape: ", preds.shape)
-    print("labels_oneh shape: ", labels_oneh.shape)
     scores = preds.reshape((num_samples, 1))
     raw_labels = labels_oneh.reshape((num_samples, 1))
 
@@ -158,7 +156,6 @@ def calibrate(config, preds, labels_oneh):
 def calc_ece_ace(config, tensor_logits, tensor_labels):
     probs = torch.nn.functional.softmax(tensor_logits, dim=1)
     labels = tensor_labels.detach().cpu().numpy()
-    print("labels shape: ", labels.shape)
     probs = tensor_logits.detach().cpu().numpy()
 
     maxprobs, one_hot_labels = get_maxprob_and_onehot(probs, labels)
@@ -173,9 +170,6 @@ def calc_ece_ace(config, tensor_logits, tensor_labels):
         ece = np.mean(saved_ece)
 
         return ece
-
-    print("preds shape: ", maxprobs.shape)
-    print("labels_oneh shape: ", one_hot_labels.shape)
 
     config['ce_type'] = 'ew_ece_bin'
     ece = _ece(config, maxprobs, one_hot_labels)
