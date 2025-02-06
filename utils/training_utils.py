@@ -158,6 +158,7 @@ def calibrate(config, preds, labels_oneh):
 def calc_ece_ace(config, tensor_logits, tensor_labels):
     probs = torch.nn.functional.softmax(tensor_logits, dim=1)
     labels = tensor_labels.detach().cpu().numpy()
+    print("labels shape: ", labels.shape)
     probs = tensor_logits.detach().cpu().numpy()
 
     maxprobs, one_hot_labels = get_maxprob_and_onehot(probs, labels)
