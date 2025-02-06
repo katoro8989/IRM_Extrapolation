@@ -76,23 +76,34 @@ class CMNIST:
             **kwargs
         )
 
-        test_env_loaders = []
-        for test_p in range(5, 100, 5):
-            test_p = test_p / 100.
-            test_env_loaders.append(
-                make_environment(mnist_test[0], mnist_test[1], test_p, label_flip_p=self.args.label_flip_p,
-                                 class_p=0.5, color_p=0.5, use_color=use_color))
+        # test_env_loaders = []
+        # for test_p in range(5, 100, 5):
+        #     test_p = test_p / 100.
+        #     test_env_loaders.append(
+        #         make_environment(mnist_test[0], mnist_test[1], test_p, label_flip_p=self.args.label_flip_p,
+        #                          class_p=0.5, color_p=0.5, use_color=use_color))
 
-        test_loader = []
+        # test_loader = []
 
-        for env_set in test_env_loaders:
-            test_ld = DataLoader(
-                env_set,
-                batch_size=self.args.batch_size,
-                shuffle=True,
-                **kwargs
-            )
-            test_loader.append(test_ld)
+        # for env_set in test_env_loaders:
+        #     test_ld = DataLoader(
+        #         env_set,
+        #         batch_size=self.args.batch_size,
+        #         shuffle=True,
+        #         **kwargs
+        #     )
+        #     test_loader.append(test_ld)
+
+        test_set = make_environment(mnist_test[0], mnist_test[1], self.args.test_env,
+                                   label_flip_p=self.args.label_flip_p,
+                                   class_p=0.5, color_p=0.5, use_color=use_color)
+
+        test_loader = DataLoader(
+            test_set,
+            batch_size=self.args.batch_size,
+            shuffle=True,
+            **kwargs
+        )
 
         return train_loader, val_loader, test_loader
 
