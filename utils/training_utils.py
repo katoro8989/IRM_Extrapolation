@@ -309,7 +309,7 @@ def get_test_acc_ece_ace(model, test_env_loader, device):
         ace_list.append(ace)
 
     ece = torch.tensor(ece_list).mean()
-    ace = torch.tensor(ace_list).mean
+    ace = torch.tensor(ace_list).mean()
 
     accuracy = correct / total
 
