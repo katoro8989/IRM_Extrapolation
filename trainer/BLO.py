@@ -15,8 +15,8 @@ def train(
     penalty_stationary_losses = AverageMeter("LS", ":.4f")
     reg_losses = AverageMeter("Reg", ":.4f")
     top1 = AverageMeter("Acc_1", ":6.2f")
-    ece = AverageMeter("ECE", ":6.2f")
-    ace = AverageMeter("ACE", ":6.2f")
+    eces = AverageMeter("ECE", ":6.2f")
+    aces = AverageMeter("ACE", ":6.2f")
 
 
     batch_total = torch.sum(torch.tensor([len(loader) for loader in train_loaders])).item()
@@ -134,8 +134,8 @@ def train(
         penalty_v0_losses.update(penalty_v0_loss.item() * penalty_weight, batch_num)
         penalty_stationary_losses.update(penalty_stationary_loss.item() * penalty_weight, batch_num)
         reg_losses.update(weight_norm.item(), batch_num)
-        ece.update(ece.item(), batch_num)
-        ace.update(ace.item(), batch_num)
+        eces.update(ece.item(), batch_num)
+        aces.update(ace.item(), batch_num)
         batch_time.update(time.time() - end)
         end = time.time()
 
