@@ -15,7 +15,9 @@ def parse_args():
 
     parser.add_argument('--epochs', type=int, default=200)
 
-    parser.add_argument('--batch_size', type=int, default=128)
+    parser.add_argument('--train_batch_size', type=int, default=128)
+
+    parser.add_argument('--eval_batch_size', type=int, default=128)
 
     parser.add_argument('--seed', default=37, type=int, help='Random seed (default: 37)')
 

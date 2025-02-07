@@ -59,7 +59,7 @@ class CMNIST:
         for env_set in env_sets:
             train_ld = DataLoader(
                 env_set,
-                batch_size=self.args.batch_size,
+                batch_size=self.args.train_batch_size,
                 shuffle=True,
                 **kwargs
             )
@@ -71,7 +71,7 @@ class CMNIST:
 
         val_loader = DataLoader(
             val_set,
-            batch_size=self.args.batch_size,
+            batch_size=self.args.eval_batch_size,
             shuffle=True,
             **kwargs
         )
@@ -100,7 +100,7 @@ class CMNIST:
 
         test_loader = DataLoader(
             test_set,
-            batch_size=self.args.batch_size,
+            batch_size=self.args.eval_batch_size,
             shuffle=True,
             **kwargs
         )

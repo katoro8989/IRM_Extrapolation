@@ -168,7 +168,7 @@ class COCOcolor_LYPD:
         for env_set in env_sets:
             train_ld = torch.utils.data.DataLoader(
                 env_set,
-                batch_size=self.flags.batch_size,
+                batch_size=self.flags.train_batch_size,
                 shuffle=False,
                 num_workers=4)
 
@@ -182,7 +182,7 @@ class COCOcolor_LYPD:
         for env_set in env_sets:
             val_ld = torch.utils.data.DataLoader(
                 env_set,
-                batch_size=self.flags.batch_size,
+                batch_size=self.flags.eval_batch_size,
                 shuffle=False,
                 num_workers=4)
 
@@ -190,7 +190,7 @@ class COCOcolor_LYPD:
 
         self.test_loader = torch.utils.data.DataLoader(
             dataset=self.test_dataset,
-            batch_size=self.flags.batch_size,
+            batch_size=self.flags.eval_batch_size,
             shuffle=False,
             num_workers=4)
 

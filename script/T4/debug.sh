@@ -1,6 +1,6 @@
 DATASET="CMNIST"
 EPOCHS=500
-BATCH_SIZE=25000
+TRAIN_BATCH_SIZE=25000
 SEED=2020
 ARCH="MLP390"
 TRAINER="IRM"
@@ -25,7 +25,7 @@ WANDB_PROJECT_NAME="IRM_debag"
 
 SHELL_ARGS="--dataset ${DATASET} \
             --epochs ${EPOCHS} \
-            --batch_size ${BATCH_SIZE} \
+            --train_batch_size ${BATCH_SIZE} \
             --seed ${SEED} \
             --arch ${ARCH} \
             --trainer ${TRAINER} \
