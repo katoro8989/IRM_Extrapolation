@@ -85,7 +85,8 @@ def main():
 
         test_accuracy, test_ece, test_ace = get_test_acc_ece_ace(model, test_loader, device)
 
-        lr = optimizer.param_groups[0]["lr"]
+        phi_lr = optimizer[-1].param_groups[0]["lr"]
+        omega_lr = optimizer[-2].param_groups[0]["lr"]
 
 
         wandb.log({
@@ -100,7 +101,8 @@ def main():
             "test_acc": test_accuracy,
             "test_ece": test_ece,
             "test_ace": test_ace,
-            "lr": lr,
+            "phi_lr": phi_lr,
+            "omega_lr": omega_lr,
         })
 
 
