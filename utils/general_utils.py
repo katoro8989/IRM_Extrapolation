@@ -35,7 +35,7 @@ def get_exp_name(args):
             class_env,
             args.epochs,
             args.wd,
-            args.batch_size
+            args.train_batch_size
         )
     elif args.trainer == "IRM" or args.trainer == "IRMv0":
         exp_name = "{}-{}-{}-TrEnv{}-PEnv{}-Epoch{}-WarmEpoch{}-penalty{:.2f}-wd{:.4f}-bs{}".format(
@@ -48,7 +48,7 @@ def get_exp_name(args):
             args.warm_start,
             args.penalty_weight,
             args.wd,
-            args.batch_size
+            args.train_batch_size
         )
     else:
         exp_name = "{}-{}-{}-TrEnv{}-PEnv{}-Epoch{}-WarmEpoch{}-penalty{:.4f}-wd{:.4f}-bs{}".format(
@@ -61,7 +61,7 @@ def get_exp_name(args):
             args.warm_start,
             args.penalty_weight,
             args.wd,
-            args.batch_size
+            args.train_batch_size
         )
 
     return exp_name
