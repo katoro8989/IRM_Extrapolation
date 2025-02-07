@@ -85,6 +85,7 @@ def main():
 
         test_accuracy, test_ece, test_ace = get_test_acc_ece_ace(model, test_loader, device)
 
+
         wandb.log({
             "epoch": epoch,
             "train_loss": train_stat[1],
