@@ -85,11 +85,7 @@ def main():
 
         test_accuracy, test_ece, test_ace = get_test_acc_ece_ace(model, test_loader, device)
 
-        phi_lr = optimizer[-1].param_groups[0]["lr"]
-        omega_lr = optimizer[-2].param_groups[0]["lr"]
-
-
-        wandb.log({
+        wandb_log_dist = {
             "epoch": epoch,
             "train_loss": train_stat[1],
             "train_acc": train_stat[0],
@@ -101,9 +97,21 @@ def main():
             "test_acc": test_accuracy,
             "test_ece": test_ece,
             "test_ace": test_ace,
-            "phi_lr": phi_lr,
-            "omega_lr": omega_lr,
-        })
+        }
+
+
+        # if optimizer is list
+        if isinstance(optimizer, list):
+            phi_lr = optimizer[-1].param_groups[0]["lr"]
+            omega_lr = optimizer[-2].param_groups[0]["lr"]
+            wandb_log_dist["phi_lr"] = phi_lr
+            wandb_log_dist["omega_lr"] = omega_lr
+        else:
+            lr = optimizer.param_groups[0]["lr"]
+            wandb_log_dist["lr"] = lr
+
+
+        wandb.log(wandb_log_dist)
 
 
 if __name__ == "__main__":
