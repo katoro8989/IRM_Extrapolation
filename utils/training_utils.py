@@ -17,10 +17,16 @@ def get_optimizer_scheduler(model, args):
         optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
         if args.optim == "lars":
             optimizer = LARS(optimizer=optimizer)
+        
+        if args.dataset == "CFMNIST" or args.dataset == "CMNIST":
+            gamma = 1.0
+        else:
+            gamma = 0.1
+            
         scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,
-                                                         milestones=[int(0.5 * args.epochs), int(0.75 * args.epochs)],
-                                                         gamma=0.1
-                                                         )
+                                                        milestones=[int(0.5 * args.epochs), int(0.75 * args.epochs)],
+                                                        gamma=0.1
+                                                        )
     else:
         optimizer = []
         for i in range(len(args.training_env)):
