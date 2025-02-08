@@ -59,7 +59,7 @@ def train(
             logits = model(images)
 
             sampleN = 10
-            train_nll
+            train_nll = 0
             train_penalty = 0
             for i in range(sampleN):
                 ebd.re_init_with_noise(args.prior_sd_coef/args.data_num)
