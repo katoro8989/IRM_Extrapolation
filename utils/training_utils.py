@@ -13,7 +13,7 @@ from models.EBD import EBD
 
 
 def get_optimizer_scheduler(model, args):
-    if args.trainer != "BLO":
+    if "BLO" not in args.trainer:
         optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
         if args.optim == "lars":
             optimizer = LARS(optimizer=optimizer)
