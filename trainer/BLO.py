@@ -84,7 +84,7 @@ def train(
             envs[env_num]["loss"] = loss
             envs[env_num]["penalty_v1"] = penalty_v1(logits, labels)
             envs[env_num]["penalty_v0"] = penalty_v0(model, images, labels, env_num)
-            envs[env_num]["penalty_stationary"] = penalty_stationary(model, images, labels, 0)
+            envs[env_num]["penalty_stationary"] = penalty_stationary(model, images, labels, env_num)
             envs[env_num]["acc"] = mean_accuracy(logits, labels)
 
             #calc calibration metirics

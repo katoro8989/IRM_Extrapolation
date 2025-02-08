@@ -21,7 +21,7 @@ PRINT_FREQ=100
 RESULT_DIR="./results"
 GPU="0"
 NO_CUDA=""
-WANDB_PROJECT_NAME="BLO_CMNIST"
+WANDB_PROJECT_NAME="BLO_debug"
 
 SHELL_ARGS="--dataset ${DATASET} \
             --epochs ${EPOCHS} \
