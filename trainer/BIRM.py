@@ -63,7 +63,7 @@ def train(
             train_penalty = 0
             for i in range(sampleN):
                 ebd.re_init_with_noise(args.prior_sd_coef/args.data_num)
-                train_logits_w = ebd(env_num).view(-1, 1)*logits
+                train_logits_w = ebd(torch.tensor(env_num)).view(-1, 1)*logits
                 train_nll_env = criterion(train_logits_w, labels)
                 grad = autograd.grad(
                     train_nll_env * len(args.training_env), ebd.parameters(),
