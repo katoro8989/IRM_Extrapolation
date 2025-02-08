@@ -83,7 +83,7 @@ def main():
             model, args, device, train_loader, optimizer, scheduler, epoch
         )
 
-        test_accuracy, test_ece, test_ace = get_test_acc_ece_ace(model, test_loader, device)
+        test_accuracy, test_ece, test_ace = get_test_acc_ece_ace(model, val_loader, device)
 
         wandb_log_dist = {
             "epoch": epoch,
