@@ -14,7 +14,7 @@ class MLP(nn.Module):
             lin1 = nn.Linear(self.channel * 14 * 14, hidden_dim)
         lin2 = nn.Linear(hidden_dim, hidden_dim)
         lin_list = []
-        self.omega_list = []
+        self.omega_list = nn.ModuleList()
         self.env_num = env_num
         for env in range(env_num):
             omega = nn.Linear(hidden_dim, 2)
