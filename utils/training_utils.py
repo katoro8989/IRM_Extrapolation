@@ -9,7 +9,7 @@ import numpy as np
 
 from utils.optim_utils import LARS
 from utils.calibration_metrics import CalibrationMetric
-
+from models.EBD import EBD
 
 
 def get_optimizer_scheduler(model, args):
@@ -25,7 +25,7 @@ def get_optimizer_scheduler(model, args):
 
         scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,
                                                         milestones=[int(0.5 * args.epochs), int(0.75 * args.epochs)],
-                                                        gamma=0.1
+                                                        gamma=gamma
                                                         )
     else:
         optimizer = []

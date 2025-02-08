@@ -104,11 +104,15 @@ def main():
         if isinstance(optimizer, list):
             phi_lr = optimizer[-1].param_groups[0]["lr"]
             omega_lr = optimizer[-2].param_groups[0]["lr"]
+            step = optimizer[-1].param_groups[0]["step"]
             wandb_log_dist["phi_lr"] = phi_lr
             wandb_log_dist["omega_lr"] = omega_lr
+            wandb_log_dist["step"] = step
         else:
             lr = optimizer.param_groups[0]["lr"]
+            step = optimizer.param_groups[0]["step"]
             wandb_log_dist["lr"] = lr
+            wandb_log_dist["step"] = step
 
 
         wandb.log(wandb_log_dist)
