@@ -58,6 +58,10 @@ def parse_args():
     ## For BLO only
     parser.add_argument('--omega_lr', type=float, default=0.002)
 
+    # For BIRM only
+    parser.add_argument('--prior_sd_coef', type=int, default=1200)
+    parser.add_argument('--data_num', type=int, default=50000)
+
     # Other settings
 
     parser.add_argument('--print_freq', type=int, default=100)
