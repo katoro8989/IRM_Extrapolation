@@ -51,7 +51,7 @@ def main():
     gpu_list = [int(i) for i in args.gpu.strip().split(",")]
     device = torch.device(f"cuda:{gpu_list[0]}" if use_cuda else "cpu")
 
-    env_num = 1 if args.trainer != "BLO" else len(args.training_env)
+    env_num = 1 if "BLO" not in args.trainer else len(args.training_env)
 
     model = models.__dict__[args.arch](
         env_num=env_num,
