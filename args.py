@@ -79,5 +79,9 @@ def parse_args():
         "--no_cuda", action="store_true", default=False, help="disables CUDA training"
     )
 
+    #for proposed method
+    parser.add_argument('--var_beta', type=float, default=10)
+    parser.add_argument('--alpha_mm', type=float, default=10)
+
     return parser.parse_args()
 

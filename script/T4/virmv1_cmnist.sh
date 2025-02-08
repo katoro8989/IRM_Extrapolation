@@ -3,7 +3,7 @@ EPOCHS=500
 TRAIN_BATCH_SIZE=25000
 SEED=2020
 ARCH="MLP390"
-TRAINER="BIRM"
+TRAINER="vIRMv1"
 DATA_DIR="/gs/bs/tge-24IJ0078/dataset"
 HIDDEN_DIM=390
 OPTIM="adam"
@@ -13,7 +13,7 @@ TRAINING_COLOR_ENV=""
 TEST_ENV=0.9
 LABEL_FLIP_P=0.25
 WD=0.00110794568
-PENALTY_WEIGHT=10000
+PENALTY_WEIGHT=91257.18613115903
 LR=0.0004898536566546834
 WARM_START=190
 OMEGA_LR=0.002
@@ -21,10 +21,7 @@ PRINT_FREQ=100
 RESULT_DIR="./results"
 GPU="0"
 NO_CUDA=""
-WANDB_PROJECT_NAME="BIRM_CMNIST"
-
-PRIOR_SD_COEF=1200
-DATA_NUM=50000
+WANDB_PROJECT_NAME="IRMv1_CMNIST"
 
 SHELL_ARGS="--dataset ${DATASET} \
             --epochs ${EPOCHS} \
@@ -45,8 +42,6 @@ SHELL_ARGS="--dataset ${DATASET} \
             --omega_lr ${OMEGA_LR} \
             --print_freq ${PRINT_FREQ} \
             --wandb_project_name ${WANDB_PROJECT_NAME} \
-            --prior_sd_coef ${PRIOR_SD_COEF} \
-            --data_num ${DATA_NUM} \
             "
 
 CMD="qsub -g tge-24IJ0078 run.sh ${SHELL_ARGS}"
