@@ -17,7 +17,7 @@ class MLP(nn.Module):
         self.omega_list = nn.ModuleList()
         self.env_num = env_num
         for env in range(env_num):
-            omega = nn.Linear(hidden_dim, 2)
+            omega = nn.Linear(hidden_dim, 1)
             if use_extend:
                 omega = extend(omega)
             lin_list.append(omega)
