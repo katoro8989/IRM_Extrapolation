@@ -23,31 +23,38 @@ GPU="0"
 NO_CUDA=""
 WANDB_PROJECT_NAME="mmBLO_CMNIST"
 
-SHELL_ARGS="--dataset ${DATASET} \
-            --epochs ${EPOCHS} \
-            --train_batch_size ${TRAIN_BATCH_SIZE} \
-            --seed ${SEED} \
-            --arch ${ARCH} \
-            --trainer ${TRAINER} \
-            --data_dir ${DATA_DIR} \
-            --hidden-dim ${HIDDEN_DIM} \
-            --optim ${OPTIM} \
-            --save \
-            --training_env ${TRAINING_ENV} \
-            --test_env ${TEST_ENV} \
-            --wd ${WD} \
-            --penalty_weight ${PENALTY_WEIGHT} \
-            --lr ${LR} \
-            --warm_start ${WARM_START} \
-            --omega_lr ${OMEGA_LR} \
-            --print_freq ${PRINT_FREQ} \
-            --wandb_project_name ${WANDB_PROJECT_NAME} \
-            --alpha_mm -1 \
-            "
+ALPHA_MM=(-0.1 -0.2 -0.3 -0.4 -0.5 -0.6 -0.7 -0.8 -0.9 -1.0)
+count=0
 
-CMD="qsub -g tge-24IJ0078 run.sh ${SHELL_ARGS}"
-echo "Exp-$((count + 1)): ${CMD}"
-eval $CMD
+for alpha_mm in "${ALPHA_MM[@]}" ; do
 
-count=$((count += 1))
-        
+    SHELL_ARGS="--dataset ${DATASET} \
+                --epochs ${EPOCHS} \
+                --train_batch_size ${TRAIN_BATCH_SIZE} \
+                --seed ${SEED} \
+                --arch ${ARCH} \
+                --trainer ${TRAINER} \
+                --data_dir ${DATA_DIR} \
+                --hidden-dim ${HIDDEN_DIM} \
+                --optim ${OPTIM} \
+                --save \
+                --training_env ${TRAINING_ENV} \
+                --test_env ${TEST_ENV} \
+                --wd ${WD} \
+                --penalty_weight ${PENALTY_WEIGHT} \
+                --lr ${LR} \
+                --warm_start ${WARM_START} \
+                --omega_lr ${OMEGA_LR} \
+                --print_freq ${PRINT_FREQ} \
+                --wandb_project_name ${WANDB_PROJECT_NAME} \
+                --alpha_mm ${alpha_mm} \
+                "
+
+    CMD="qsub -g tge-24IJ0078 run.sh ${SHELL_ARGS}"
+    echo "Exp-$((count + 1)): ${CMD}"
+    eval $CMD
+
+    count=$((count += 1))
+            
+done
+echo "Num of Trials: $count"

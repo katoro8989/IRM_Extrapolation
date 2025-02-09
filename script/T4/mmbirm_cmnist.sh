@@ -3,7 +3,7 @@ EPOCHS=500
 TRAIN_BATCH_SIZE=25000
 SEED=2020
 ARCH="MLP390"
-TRAINER="vBLO"
+TRAINER="mmBIRM"
 DATA_DIR="/gs/bs/tge-24IJ0078/dataset"
 HIDDEN_DIM=390
 OPTIM="adam"
@@ -14,19 +14,22 @@ TEST_ENV=0.9
 LABEL_FLIP_P=0.25
 WD=0.00110794568
 PENALTY_WEIGHT=91257.18613115903
-LR=0.002
+LR=0.0004898536566546834
 WARM_START=190
 OMEGA_LR=0.002
 PRINT_FREQ=100
 RESULT_DIR="./results"
 GPU="0"
 NO_CUDA=""
-WANDB_PROJECT_NAME="vBLO_CMNIST"
+WANDB_PROJECT_NAME="mmBIRM_CMNIST"
 
-VAR_BETAS=(1e-1 1e-2 1e-3 1e-4 1e-5 1e-6 1e-7 1e-8 1e-9 1e-10)
+PRIOR_SD_COEF=1200
+DATA_NUM=50000
+
+ALPHA_MM=(-0.1 -0.2 -0.3 -0.4 -0.5 -0.6 -0.7 -0.8 -0.9 -1.0)
 count=0
 
-for var_beta in "${VAR_BETAS[@]}" ; do
+for alpha_mm in "${ALPHA_MM[@]}" ; do
 
     SHELL_ARGS="--dataset ${DATASET} \
                 --epochs ${EPOCHS} \
@@ -47,7 +50,9 @@ for var_beta in "${VAR_BETAS[@]}" ; do
                 --omega_lr ${OMEGA_LR} \
                 --print_freq ${PRINT_FREQ} \
                 --wandb_project_name ${WANDB_PROJECT_NAME} \
-                --var_beta ${var_beta} \
+                --prior_sd_coef ${PRIOR_SD_COEF} \
+                --data_num ${DATA_NUM} \
+                --alpha_mm ${alpha_mm} \
                 "
 
     CMD="qsub -g tge-24IJ0078 run.sh ${SHELL_ARGS}"
