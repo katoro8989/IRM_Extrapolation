@@ -191,6 +191,11 @@ def calibrate(config, preds, labels_oneh):
     return 100 * ce
 
 def calc_ece_ace(config, tensor_logits, tensor_labels):
+    if tensor_logits.dim() == 1 or (tensor_logits.dim() == 2 and tensor_logits.shape[1] == 1):
+        # 0 で埋めたテンソルと連結
+        tensor_logits = torch.cat([torch.zeros_like(tensor_logits), tensor_logits], dim=1)
+
+
     probs = torch.nn.functional.softmax(tensor_logits, dim=1)
     labels = tensor_labels.detach().cpu().numpy()
     probs = probs.detach().cpu().numpy()
