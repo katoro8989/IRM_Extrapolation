@@ -73,10 +73,11 @@ def criterion(logits, y):
 
 
 def mean_accuracy(logits, y):
-    _, predicted = torch.max(logits, 1)
-    correct = (predicted == y.view(-1)).sum()
-    return correct / y.shape[0]
-
+    # _, predicted = torch.max(logits, 1)
+    # correct = (predicted == y.view(-1)).sum()
+    # return correct / y.shape[0]
+    preds = (logits > 0.).float()
+    return ((preds - y).abs() < 1e-2).float().mean()
 
 def penalty_v1(logits, y):
     device = get_device(logits)
