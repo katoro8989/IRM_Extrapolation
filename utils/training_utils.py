@@ -279,17 +279,16 @@ def get_test_acc(model, test_env_loaders, device):
     accuracy = []
     for test_ld in test_env_loaders:
 
-        total = 0
-        correct = 0
+        batch_acc = []
 
         for (images, labels) in test_ld:
             images = images.to(device)
             labels = labels.to(device)
-            total += images.shape[0]
-            _, predicted = torch.max(model(images), 1)
-            correct += (predicted == labels.view(-1)).sum()
+            batch_acc.append(mean_accuracy(model(images), labels))
 
-        accuracy.append(correct / total)
+        env_acc = torch.tensor(batch_acc).mean()
+
+        accuracy.append(env_acc)
     accuracy = torch.tensor(accuracy)
 
     return accuracy
@@ -303,13 +302,14 @@ def get_test_acc_ece_ace(model, test_env_loader, device):
     ece_list = []
     ace_list = []
 
+    batch_acc = []
+
     for (images, labels) in test_env_loader:
         images = images.to(device)
         labels = labels.to(device)
         total += images.shape[0]
         logits = model(images)
-        _, predicted = torch.max(logits, 1)
-        correct += (predicted == labels.view(-1)).sum()
+        batch_acc.append(mean_accuracy(logits, labels))
 
         #calc calibration metirics
         ece_config = init_config()
@@ -324,7 +324,7 @@ def get_test_acc_ece_ace(model, test_env_loader, device):
     ece = torch.tensor(ece_list).mean()
     ace = torch.tensor(ace_list).mean()
 
-    accuracy = correct / total
+    accuracy = torch.tensor(batch_acc).mean()
 
     return accuracy, ece, ace
 
