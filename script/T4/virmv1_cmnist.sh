@@ -23,7 +23,7 @@ GPU="0"
 NO_CUDA=""
 WANDB_PROJECT_NAME="vIRMv1_CMNIST"
 
-VAR_BETAS=(1e-1 1e-2 1e-3 1e-4 1e-5 1e-6 1e-7 1e-8 1e-9 1e-10)
+VAR_BETAS=(1e-1 2e-1 3e-1 4e-1 5e-1 6e-1 7e-1 8e-1 9e-1)
 count=0
 
 for var_beta in "${VAR_BETAS[@]}" ; do
