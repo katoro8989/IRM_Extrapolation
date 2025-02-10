@@ -24,7 +24,7 @@ NO_CUDA=""
 WANDB_PROJECT_NAME="BLO_CMNIST"
 
 
-SEEDS=(2021 2022)
+SEEDS=(2020)
 count=0
 
 for seed in "${SEEDS[@]}" ; do
