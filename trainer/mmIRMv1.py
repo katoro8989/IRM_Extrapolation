@@ -80,7 +80,7 @@ def train(
         penalty_v1_loss = penalty_v1_tensor.mean()
         penalty_v0_loss = torch.stack([env["penalty_v0"] for env in envs]).mean()
         penalty_stationary_loss = torch.stack([env["penalty_stationary"] for env in envs]).mean()
-        penalty_mm_v1 = (1 - args.alpha_mm * len(envs)) * penalty_v1_loss.max() + args.alpha_mm * penalty_v1_tensor.sum()
+        penalty_mm_v1 = (1 - args.alpha_mm * len(envs)) * penalty_v1_tensor.max() + args.alpha_mm * penalty_v1_tensor.sum()
         ece = torch.stack([env["ece"] for env in envs]).mean()
         ace = torch.stack([env["ace"] for env in envs]).mean()
 
