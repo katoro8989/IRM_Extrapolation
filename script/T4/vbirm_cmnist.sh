@@ -27,14 +27,15 @@ PRIOR_SD_COEF=1200
 DATA_NUM=50000
 
 VAR_BETAS=(1e-1 3e-1 4e-1 5e-1 6e-1)
+SEEDS=(2021 2022)
 count=0
 
-for var_beta in "${VAR_BETAS[@]}" ; do
+for seed in "${SEEDS[@]}" ; do
 
     SHELL_ARGS="--dataset ${DATASET} \
                 --epochs ${EPOCHS} \
                 --train_batch_size ${TRAIN_BATCH_SIZE} \
-                --seed ${SEED} \
+                --seed ${seed} \
                 --arch ${ARCH} \
                 --trainer ${TRAINER} \
                 --data_dir ${DATA_DIR} \
@@ -52,7 +53,7 @@ for var_beta in "${VAR_BETAS[@]}" ; do
                 --wandb_project_name ${WANDB_PROJECT_NAME} \
                 --prior_sd_coef ${PRIOR_SD_COEF} \
                 --data_num ${DATA_NUM} \
-                --var_beta ${var_beta} \
+                --var_beta 0.8 \
                 "
 
     CMD="qsub -g tge-24IJ0078 run.sh ${SHELL_ARGS}"

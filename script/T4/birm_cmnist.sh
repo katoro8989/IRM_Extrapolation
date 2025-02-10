@@ -26,32 +26,38 @@ WANDB_PROJECT_NAME="BIRM_CMNIST"
 PRIOR_SD_COEF=1200
 DATA_NUM=50000
 
-SHELL_ARGS="--dataset ${DATASET} \
-            --epochs ${EPOCHS} \
-            --train_batch_size ${TRAIN_BATCH_SIZE} \
-            --seed ${SEED} \
-            --arch ${ARCH} \
-            --trainer ${TRAINER} \
-            --data_dir ${DATA_DIR} \
-            --hidden-dim ${HIDDEN_DIM} \
-            --optim ${OPTIM} \
-            --save \
-            --training_env ${TRAINING_ENV} \
-            --test_env ${TEST_ENV} \
-            --wd ${WD} \
-            --penalty_weight ${PENALTY_WEIGHT} \
-            --lr ${LR} \
-            --warm_start ${WARM_START} \
-            --omega_lr ${OMEGA_LR} \
-            --print_freq ${PRINT_FREQ} \
-            --wandb_project_name ${WANDB_PROJECT_NAME} \
-            --prior_sd_coef ${PRIOR_SD_COEF} \
-            --data_num ${DATA_NUM} \
-            "
+SEEDS=(2021 2022)
+count=0
 
-CMD="qsub -g tge-24IJ0078 run.sh ${SHELL_ARGS}"
-echo "Exp-$((count + 1)): ${CMD}"
-eval $CMD
+for seed in "${SEEDS[@]}" ; do
 
-count=$((count += 1))
-        
+    SHELL_ARGS="--dataset ${DATASET} \
+                --epochs ${EPOCHS} \
+                --train_batch_size ${TRAIN_BATCH_SIZE} \
+                --seed ${seed} \
+                --arch ${ARCH} \
+                --trainer ${TRAINER} \
+                --data_dir ${DATA_DIR} \
+                --hidden-dim ${HIDDEN_DIM} \
+                --optim ${OPTIM} \
+                --save \
+                --training_env ${TRAINING_ENV} \
+                --test_env ${TEST_ENV} \
+                --wd ${WD} \
+                --penalty_weight ${PENALTY_WEIGHT} \
+                --lr ${LR} \
+                --warm_start ${WARM_START} \
+                --omega_lr ${OMEGA_LR} \
+                --print_freq ${PRINT_FREQ} \
+                --wandb_project_name ${WANDB_PROJECT_NAME} \
+                --prior_sd_coef ${PRIOR_SD_COEF} \
+                --data_num ${DATA_NUM} \
+                "
+
+    CMD="qsub -g tge-24IJ0078 run.sh ${SHELL_ARGS}"
+    echo "Exp-$((count + 1)): ${CMD}"
+    eval $CMD
+
+    count=$((count += 1))
+            
+done

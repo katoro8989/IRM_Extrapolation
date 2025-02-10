@@ -24,14 +24,16 @@ NO_CUDA=""
 WANDB_PROJECT_NAME="mmBLO_CMNIST"
 
 ALPHA_MM=(-0.1 -0.2 -1.0)
+SEEDS=(2021 2022)
+alpha_mm=-0.1
 count=0
 
-for alpha_mm in "${ALPHA_MM[@]}" ; do
+for seed in "${SEEDS[@]}" ; do
 
     SHELL_ARGS="--dataset ${DATASET} \
                 --epochs ${EPOCHS} \
                 --train_batch_size ${TRAIN_BATCH_SIZE} \
-                --seed ${SEED} \
+                --seed ${seed} \
                 --arch ${ARCH} \
                 --trainer ${TRAINER} \
                 --data_dir ${DATA_DIR} \

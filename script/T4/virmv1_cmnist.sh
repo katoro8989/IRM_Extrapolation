@@ -24,14 +24,15 @@ NO_CUDA=""
 WANDB_PROJECT_NAME="vIRMv1_CMNIST"
 
 VAR_BETAS=(7e-1 9e-1)
+SEEDS=(2021 2022)
 count=0
 
-for var_beta in "${VAR_BETAS[@]}" ; do
+for seed in "${SEEDS[@]}" ; do
 
     SHELL_ARGS="--dataset ${DATASET} \
                 --epochs ${EPOCHS} \
                 --train_batch_size ${TRAIN_BATCH_SIZE} \
-                --seed ${SEED} \
+                --seed ${seed} \
                 --arch ${ARCH} \
                 --trainer ${TRAINER} \
                 --data_dir ${DATA_DIR} \
@@ -47,7 +48,7 @@ for var_beta in "${VAR_BETAS[@]}" ; do
                 --omega_lr ${OMEGA_LR} \
                 --print_freq ${PRINT_FREQ} \
                 --wandb_project_name ${WANDB_PROJECT_NAME} \
-                --var_beta ${var_beta} \
+                --var_beta 0.7 \
                 "
 
     CMD="qsub -g tge-24IJ0078 run.sh ${SHELL_ARGS}"

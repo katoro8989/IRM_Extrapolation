@@ -24,9 +24,10 @@ NO_CUDA=""
 WANDB_PROJECT_NAME="vBLO_CMNIST"
 
 VAR_BETAS=(2e-1 7e-1 8e-1 9e-1)
+SEEDS=(2021 2022)
 count=0
 
-for var_beta in "${VAR_BETAS[@]}" ; do
+for seed in "${SEEDS[@]}" ; do
 
     SHELL_ARGS="--dataset ${DATASET} \
                 --epochs ${EPOCHS} \
@@ -47,7 +48,7 @@ for var_beta in "${VAR_BETAS[@]}" ; do
                 --omega_lr ${OMEGA_LR} \
                 --print_freq ${PRINT_FREQ} \
                 --wandb_project_name ${WANDB_PROJECT_NAME} \
-                --var_beta ${var_beta} \
+                --var_beta 0.3 \
                 "
 
     CMD="qsub -g tge-24IJ0078 run.sh ${SHELL_ARGS}"
