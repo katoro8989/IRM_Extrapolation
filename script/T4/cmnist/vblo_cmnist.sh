@@ -32,7 +32,7 @@ for seed in "${SEEDS[@]}" ; do
     SHELL_ARGS="--dataset ${DATASET} \
                 --epochs ${EPOCHS} \
                 --train_batch_size ${TRAIN_BATCH_SIZE} \
-                --seed ${SEED} \
+                --seed ${seed} \
                 --arch ${ARCH} \
                 --trainer ${TRAINER} \
                 --data_dir ${DATA_DIR} \
