@@ -26,7 +26,7 @@ WANDB_PROJECT_NAME="mmBIRM_CMNIST"
 PRIOR_SD_COEF=1200
 DATA_NUM=50000
 
-ALPHA_MM=(-0.1 -0.2 -0.3 -0.4 -0.5 -0.6 -0.7 -0.8 -0.9 -1.0)
+ALPHA_MM=(-0.2 -0.3 -0.4)
 count=0
 
 for alpha_mm in "${ALPHA_MM[@]}" ; do
