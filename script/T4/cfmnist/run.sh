@@ -7,7 +7,7 @@
 #$ -N irmv1_vrex.sh
 
 # ======== Module, Virtualenv and Other Dependencies ======
-source ../env/t4_env.sh
+source ../../env/t4_env.sh
 echo "PYTHON Environment: $PYTHON_PATH"
 export PYTHONPATH=.
 export PATH=$PYTHON_PATH:$PATH
