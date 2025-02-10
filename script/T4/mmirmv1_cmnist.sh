@@ -23,7 +23,7 @@ GPU="0"
 NO_CUDA=""
 WANDB_PROJECT_NAME="mmIRMv1_CMNIST"
 
-ALPHA_MM=(-0.1 -0.2 -0.3 -0.4 -0.5 -0.6 -0.7 -0.8 -0.9 -1.0)
+ALPHA_MM=(-10)
 count=0
 
 for alpha_mm in "${ALPHA_MM[@]}" ; do
