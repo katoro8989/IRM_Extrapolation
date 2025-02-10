@@ -12,16 +12,11 @@ def train(
     batch_time = AverageMeter("Time", ":6.3f")
     losses = AverageMeter("Loss", ":.4f")
     penalty_v1_losses = AverageMeter("Penalty v1", ":.4f")
-    penalty_stationary_loss = AverageMeter("Stationary Loss", ":.4f")
     top1 = AverageMeter("Acc_1", ":6.2f")
+    eces = AverageMeter("ECE", ":6.2f")
+    aces = AverageMeter("ACE", ":6.2f")
 
-    batch_total = torch.sum(torch.tensor([len(loader) for loader in train_loaders])).item()
-    progress = ProgressMeter(
-        batch_total,
-        [batch_time, losses, top1, penalty_v1_losses, penalty_stationary_loss],
-        prefix="Epoch: [{}]".format(epoch),
-    )
-
+    
     model.train()
     end = time.time()
 
@@ -52,12 +47,21 @@ def train(
             logits = model(images)
             loss = criterion(logits, labels)
             penalty_v1_loss = penalty_v1(logits, labels)
-            penalty_stationary(model, images, labels, 0)
             acc1 = mean_accuracy(logits, labels)
+
+            #calc calibration metirics
+            ece_config = init_config()
+            ece_config['num_reps'] = 100
+            ece_config['norm'] = 1
+            ece_config['ce_type'] = 'em_ece_bin'
+            ece_config['num_bins'] = 10
+            ece, ace = calc_ece_ace(ece_config, logits, labels)
 
             losses.update(loss.item(), images.shape[0])
             top1.update(acc1.item(), images.shape[0])
             penalty_v1_losses.update(penalty_v1_loss.item(), images.shape[0])
+            eces.update(ece, images.shape[0])
+            aces.update(ace, images.shape[0])
 
             weight_norm = torch.tensor(0.).to(device)
             for w in model.parameters():
@@ -71,10 +75,7 @@ def train(
             batch_time.update(time.time() - end)
             end = time.time()
 
-            if iter_num % args.print_freq == 0:
-                progress.display(iter_num)
-
-    return [top1.avg, losses.avg, penalty_v0_losses.avg, penalty_v1_losses.avg, penalty_stationary_losses.avg, reg_losses.avg, eces.avg, aces.avg]
+    return [top1.avg, losses.avg, None, penalty_v1_losses.avg, None, None, eces.avg, aces.avg]
 
 
 

@@ -1,7 +1,7 @@
 #!/bin/sh
 #$ -cwd
 #$ -l gpu_h=1
-#$ -l h_rt=00:30:00
+#$ -l h_rt=00:35:00
 #$ -o results/$JOB_ID.out
 #$ -e results/$JOB_ID.err
 #$ -N irmv1_vrex.sh
