@@ -24,7 +24,7 @@ NO_CUDA=""
 WANDB_PROJECT_NAME="vBLO_CMNIST"
 
 VAR_BETAS=(2e-1 7e-1 8e-1 9e-1)
-SEEDS=(2020 2021 2022)
+SEEDS=(2021 2022)
 count=0
 
 for seed in "${SEEDS[@]}" ; do
