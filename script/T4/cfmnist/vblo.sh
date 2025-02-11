@@ -24,15 +24,16 @@ NO_CUDA=""
 WANDB_PROJECT_NAME="vBLO_CFMNIST"
 
 VAR_BETAS=(1e-1 2e-1 3e-1 4e-1 5e-1 6e-1 7e-1 8e-1 9e-1)
-SEEDS=(2020 2021 2022)
+var_beta=0.1
+SEEDS=(2021 2022)
 count=0
 
-for var_beta in "${VAR_BETAS[@]}" ; do
+for seed in "${SEEDS[@]}" ; do
 
     SHELL_ARGS="--dataset ${DATASET} \
                 --epochs ${EPOCHS} \
                 --train_batch_size ${TRAIN_BATCH_SIZE} \
-                --seed ${SEED} \
+                --seed ${seed} \
                 --arch ${ARCH} \
                 --trainer ${TRAINER} \
                 --data_dir ${DATA_DIR} \
