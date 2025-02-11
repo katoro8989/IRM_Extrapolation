@@ -70,7 +70,7 @@ def main():
     torch.cuda.empty_cache()
     model = models.__dict__[args.arch](
         env_num=env_num,
-        use_color=True if len(args.training_color_env) > 0 else False
+        use_color=False
     )
     model.load_device(device)
 
