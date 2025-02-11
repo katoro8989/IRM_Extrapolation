@@ -68,16 +68,16 @@ def get_device(tensor):
 
 
 def criterion(logits, y):
-    # return torch.nn.CrossEntropyLoss()(logits, y.view(-1))
-    return torch.nn.functional.binary_cross_entropy_with_logits(logits, y.float())
+    return torch.nn.CrossEntropyLoss()(logits, y.view(-1))
+    # return torch.nn.functional.binary_cross_entropy_with_logits(logits, y.float())
 
 
 def mean_accuracy(logits, y):
-    # _, predicted = torch.max(logits, 1)
-    # correct = (predicted == y.view(-1)).sum()
-    # return correct / y.shape[0]
-    preds = (logits > 0.).float()
-    return ((preds - y).abs() < 1e-2).float().mean()
+    _, predicted = torch.max(logits, 1)
+    correct = (predicted == y.view(-1)).sum()
+    return correct / y.shape[0]
+    # preds = (logits > 0.).float()
+    # return ((preds - y).abs() < 1e-2).float().mean()
 
 def penalty_v1(logits, y):
     device = get_device(logits)
@@ -191,9 +191,9 @@ def calibrate(config, preds, labels_oneh):
     return 100 * ce
 
 def calc_ece_ace(config, tensor_logits, tensor_labels):
-    if tensor_logits.dim() == 1 or (tensor_logits.dim() == 2 and tensor_logits.shape[1] == 1):
-        # 0 で埋めたテンソルと連結
-        tensor_logits = torch.cat([torch.zeros_like(tensor_logits), tensor_logits], dim=1)
+    # if tensor_logits.dim() == 1 or (tensor_logits.dim() == 2 and tensor_logits.shape[1] == 1):
+    #     # 0 で埋めたテンソルと連結
+    #     tensor_logits = torch.cat([torch.zeros_like(tensor_logits), tensor_logits], dim=1)
 
 
     probs = torch.nn.functional.softmax(tensor_logits, dim=1)

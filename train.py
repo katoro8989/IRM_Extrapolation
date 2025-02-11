@@ -18,7 +18,7 @@ def main():
     args = parse_args()
     parse_configs_file(args)
 
-    setup_seed(args.seed)
+    setup_seed(2020)
 
     # All kinds of dir names
     exp_name = get_exp_name(args)
@@ -63,6 +63,19 @@ def main():
     # Dataloader
     D = datasets.__dict__[args.dataset](args)
     train_loader, val_loader, test_loader = D.data_loaders()
+
+    setup_seed(args.seed)
+    # del model from gpu
+    del model
+    torch.cuda.empty_cache()
+    model = models.__dict__[args.arch](
+        env_num=env_num,
+        use_color=True if len(args.training_color_env) > 0 else False
+    )
+    model.load_device(device)
+
+
+
 
     # Trainer
     trainer = importlib.import_module(f"trainer.{args.trainer}").train
