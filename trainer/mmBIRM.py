@@ -122,7 +122,7 @@ def train(
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        scheduler.step()
+        #scheduler.step()
 
         # Update Statistics
         losses.update(training_loss.item(), batch_num)
