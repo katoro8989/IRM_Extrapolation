@@ -101,6 +101,7 @@ def main():
         train_stat = trainer(
             model, args, device, train_loader, optimizer, scheduler, epoch
         )
+        scheduler.step()
 
         test_accuracy, test_ece, test_ace = get_test_acc_ece_ace(model, test_loader, device)
 

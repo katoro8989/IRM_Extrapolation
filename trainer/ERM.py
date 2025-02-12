@@ -67,12 +67,9 @@ def train(
             for w in model.parameters():
                 weight_norm += w.norm().pow(2)
 
-            print("lr", optimizer.param_groups[0]['lr'])
-
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-            lr_scheduler.step()
 
             batch_time.update(time.time() - end)
             end = time.time()
