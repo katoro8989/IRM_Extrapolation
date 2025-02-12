@@ -18,7 +18,7 @@ def main():
     args = parse_args()
     parse_configs_file(args)
 
-    setup_seed(2020)
+    setup_seed(args.seed)
 
     # All kinds of dir names
     exp_name = get_exp_name(args)
@@ -53,10 +53,15 @@ def main():
 
     env_num = 1 if "BLO" not in args.trainer else len(args.training_env)
 
-    model = models.__dict__[args.arch](
-        env_num=env_num,
-        use_color=True if len(args.training_color_env) > 0 else False
-    )
+    if "MNIST" in args.dataset:
+        model = models.__dict__[args.arch](
+            env_num=env_num,
+            use_color=True if len(args.training_color_env) > 0 else False
+        )
+    else:
+        model = models.ResNet.resnet18_sepfc_us(
+                pretrained=False,
+                num_classes=1)
 
     model.load_device(device)
 
@@ -64,15 +69,15 @@ def main():
     D = datasets.__dict__[args.dataset](args)
     train_loader, val_loader, test_loader = D.data_loaders()
 
-    setup_seed(args.seed)
-    # del model from gpu
-    del model
-    torch.cuda.empty_cache()
-    model = models.__dict__[args.arch](
-        env_num=env_num,
-        use_color=False
-    )
-    model.load_device(device)
+    # setup_seed(args.seed)
+    # # del model from gpu
+    # del model
+    # torch.cuda.empty_cache()
+    # model = models.__dict__[args.arch](
+    #     env_num=env_num,
+    #     use_color=False
+    # )
+    # model.load_device(device)
 
 
 

@@ -9,6 +9,8 @@ import os, sys, glob, time, subprocess
 import h5py
 from PIL import Image
 
+from utils.general_utils import setup_seed
+
 
 def get_transform_coco(num_classes):
     if num_classes == 2:
@@ -153,6 +155,7 @@ class COCOcolor_LYPD:
         self.flags = flags
 
     def data_loaders(self, **kwargs):
+        setup_seed(1)
         sp_ratio_list = [float(x) for x in "0.999_0.7_0.1".split("_")]
         self.train_dataset, self.val_dataset, self.test_dataset = get_spcoco_dataset(
             sp_ratio_list=sp_ratio_list,
@@ -164,12 +167,14 @@ class COCOcolor_LYPD:
         for i, env_p in enumerate(self.flags.training_env):
             env_sets.append(Subset(self.train_dataset, np.where(self.train_dataset.env_array == i)[0]))
 
+        set_seed(self.flags.seed)
+
         self.train_loader = []
         for env_set in env_sets:
             train_ld = torch.utils.data.DataLoader(
                 env_set,
                 batch_size=self.flags.train_batch_size,
-                shuffle=False,
+                shuffle=True,
                 num_workers=4)
 
             self.train_loader.append(train_ld)

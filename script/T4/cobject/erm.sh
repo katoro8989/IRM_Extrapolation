@@ -1,21 +1,19 @@
 DATASET="COCOcolor_LYPD"
-EPOCHS=500
-TRAIN_BATCH_SIZE=512
+EPOCHS=200
+TRAIN_BATCH_SIZE=128
 SEED=2020
-ARCH="MLP390"
 TRAINER="ERM"
 DATA_DIR="/gs/bs/tge-24IJ0078/dataset"
-HIDDEN_DIM=390
 OPTIM="adam"
-TRAINING_ENV="0.1 0.2"
+TRAINING_ENV="0.999 0.7"
 TRAINING_CLASS_ENV=""
 TRAINING_COLOR_ENV=""
-TEST_ENV=0.9
+TEST_ENV=0.1
 LABEL_FLIP_P=0.25
 WD=0.00110794568
 PENALTY_WEIGHT=91257.18613115903
-LR=0.0004898536566546834
-WARM_START=190
+LR=0.1
+WARM_START=50
 OMEGA_LR=0.002
 PRINT_FREQ=100
 RESULT_DIR="./results"
@@ -31,10 +29,8 @@ for seed in "${SEEDS[@]}" ; do
                 --epochs ${EPOCHS} \
                 --train_batch_size ${TRAIN_BATCH_SIZE} \
                 --seed ${seed} \
-                --arch ${ARCH} \
                 --trainer ${TRAINER} \
                 --data_dir ${DATA_DIR} \
-                --hidden-dim ${HIDDEN_DIM} \
                 --optim ${OPTIM} \
                 --save \
                 --training_env ${TRAINING_ENV} \
