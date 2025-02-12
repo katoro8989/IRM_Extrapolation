@@ -94,7 +94,7 @@ class CFMNIST:
             )
             test_loader.append(test_ld)
 
-        return train_loader, val_loader, test_loader
+        return train_loader, val_loader
 
 
 if __name__ == "__main__":

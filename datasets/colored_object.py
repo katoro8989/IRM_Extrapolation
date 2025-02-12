@@ -146,7 +146,7 @@ def get_spcoco_dataset(sp_ratio_list=None, noise_ratio=None, num_classes=None, f
         transform=coco_transform,
         sp_array=test_data_handle["g"][:])
 
-    return coco_dataset_train, coco_dataset_val, coco_dataset_test
+    return coco_dataset_train, coco_dataset_test
 
 
 

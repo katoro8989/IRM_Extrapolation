@@ -68,7 +68,7 @@ def main():
 
     # Dataloader
     D = datasets.__dict__[args.dataset](args)
-    train_loader, val_loader, test_loader = D.data_loaders()
+    train_loader, test_loader = D.data_loaders()
 
     # setup_seed(args.seed)
     # # del model from gpu
@@ -102,7 +102,7 @@ def main():
             model, args, device, train_loader, optimizer, scheduler, epoch
         )
 
-        test_accuracy, test_ece, test_ace = get_test_acc_ece_ace(model, val_loader, device)
+        test_accuracy, test_ece, test_ace = get_test_acc_ece_ace(model, test_loader, device)
 
         wandb_log_dist = {
             "epoch": epoch,
