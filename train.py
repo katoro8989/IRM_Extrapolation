@@ -102,7 +102,7 @@ def main():
             model, args, device, train_loader, optimizer, scheduler, epoch
         )
         
-        if "BLO" in args.trainer:
+        if isinstance(scheduler, list):
             for schedule in scheduler:
                 schedule.step()
         else:
