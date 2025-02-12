@@ -167,7 +167,7 @@ class COCOcolor_LYPD:
         for i, env_p in enumerate(self.flags.training_env):
             env_sets.append(Subset(self.train_dataset, np.where(self.train_dataset.env_array == i)[0]))
 
-        set_seed(self.flags.seed)
+        setup_seed(self.flags.seed)
 
         self.train_loader = []
         for env_set in env_sets:
