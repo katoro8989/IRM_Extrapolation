@@ -11,7 +11,7 @@ def parse_args():
 
     # General Training Settings
 
-    parser.add_argument('--dataset', type=str, default="CMNIST", choices=["CMNIST", "CFMNIST"])
+    parser.add_argument('--dataset', type=str, default="CMNIST", choices=["CMNIST", "CFMNIST", "COCOcolor_LYPD"])
 
     parser.add_argument('--epochs', type=int, default=200)
 
