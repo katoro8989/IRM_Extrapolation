@@ -58,7 +58,7 @@ class COCODataset(object):
         img = Image.fromarray(img)
         x = self.transform(img)
 
-        return x,y,g, sp
+        return x,y
 
 def get_coco_handles(num_classes=2, sp_ratio_list=None, noise_ratio=0, dataset='colour', train_test=None, flags=None, grayscale_model=False):
     data_dir = "/gs/bs/tge-24IJ0078/dataset/SPCOCO/coco"
