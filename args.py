@@ -29,7 +29,7 @@ def parse_args():
 
     parser.add_argument('--hidden-dim', type=int, default=390)
 
-    parser.add_argument('--optim', default="adam", choices=["adam", "lamb", "sam", "lars"])
+    parser.add_argument('--optim', default="adam", choices=["adam", "lamb", "sam", "lars", "sgd"])
 
     parser.add_argument('--save', action="store_true", help="Do you want to save checkpoints?")
 

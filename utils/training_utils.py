@@ -15,9 +15,11 @@ from models.EBD import EBD
 def get_optimizer_scheduler(model, args):
     if "BLO" not in args.trainer:
         print("lr: ", args.lr)
-        # optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
-        optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=0.9)
-        if args.optim == "lars":
+        if args.optim == "adam":
+            optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
+        elif args.optim == "sgd":
+            optimizer = torch.optim.SGD(model.parameters(), lr=args.lr, momentum=0.9)
+        elif args.optim == "lars":
             optimizer = LARS(optimizer=optimizer)
         
         if args.dataset == "CFMNIST" or args.dataset == "CMNIST":
@@ -25,11 +27,16 @@ def get_optimizer_scheduler(model, args):
         else:
             gamma = 0.1
 
-        scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,
-                                                        # milestones=[int(0.5 * args.epochs), int(0.75 * args.epochs)],
-                                                        milestones=[int(0.5 * args.epochs)],
-                                                        gamma=gamma
-                                                        )
+        if args.optim == "sgd":
+            scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,
+                                                            milestones=[int(0.5 * args.epochs)],
+                                                            gamma=gamma
+                                                            )
+        else:
+            scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,
+                                                            milestones=[int(0.5 * args.epochs), int(0.75 * args.epochs)],
+                                                            gamma=gamma
+                                                            )
         print("lr: ", optimizer.param_groups[0]["lr"])
     else:
         optimizer = []
