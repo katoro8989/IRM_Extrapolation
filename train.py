@@ -61,7 +61,8 @@ def main():
     else:
         model = models.ResNet.resnet18_sepfc_us(
                 pretrained=False,
-                num_classes=1)
+                num_classes=1,
+                num_envs=env_num)
 
     model.load_device(device)
 
