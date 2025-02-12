@@ -114,7 +114,7 @@ if __name__ == "__main__":
     args = parse_args()
     dataset = CMNIST(args)
 
-    train_loader, val_loader, test_loader = dataset.data_loaders()
+    train_loader, test_loader = dataset.data_loaders()
 
     total = 0
     for loader in train_loader:

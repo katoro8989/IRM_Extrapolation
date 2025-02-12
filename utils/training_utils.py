@@ -14,6 +14,7 @@ from models.EBD import EBD
 
 def get_optimizer_scheduler(model, args):
     if "BLO" not in args.trainer:
+        print("lr: ", args.lr)
         optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
         if args.optim == "lars":
             optimizer = LARS(optimizer=optimizer)
@@ -27,6 +28,7 @@ def get_optimizer_scheduler(model, args):
                                                         milestones=[int(0.5 * args.epochs), int(0.75 * args.epochs)],
                                                         gamma=gamma
                                                         )
+        print("lr: ", optimizer.param_groups[0]["lr"])
     else:
         optimizer = []
         for i in range(len(args.training_env)):
