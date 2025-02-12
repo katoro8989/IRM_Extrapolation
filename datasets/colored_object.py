@@ -60,14 +60,14 @@ class COCODataset(object):
 
         return x,y,g, sp
 
-def get_coco_handles(num_classes=2, sp_ratio_list=None, noise_ratio=0, dataset='colour', train_test=None, flags=None):
+def get_coco_handles(num_classes=2, sp_ratio_list=None, noise_ratio=0, dataset='colour', train_test=None, flags=None, grayscale_model=False):
     data_dir = "/gs/bs/tge-24IJ0078/dataset/SPCOCO/coco"
     if dataset == 'places':
         dataset_name = 'cocoplaces_vf_{}_{}'.format(num_classes, confounder_strength)
         original_dirname = os.path.join(data_dir, dataset_name)
     elif dataset == 'colour':
 
-        if flags.grayscale_model:
+        if grayscale_model:
             dataset_name = 'cocogrey__class_{}_noise_{}_sz_{}'.format(
                 num_classes,
                 noise_ratio,
