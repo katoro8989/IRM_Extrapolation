@@ -111,25 +111,24 @@ def get_spcoco_dataset(sp_ratio_list=None, noise_ratio=None, num_classes=None, f
     train_env_array = train_data_handle["e"][:]
     train_sp_array = train_data_handle["g"][:]
     print(train_x_array.shape)
+    random_seed = 1
+    np.random.seed(random_seed)
     perm = np.random.permutation(
         range(train_x_array.shape[0]))
-    # split train and validation
-    train_perm = perm[:int(0.8 * len(perm))]
-    val_perm = perm[int(0.8 * len(perm)):]
 
     coco_dataset_train = COCODataset(
-        x_array=train_x_array[train_perm],
-        y_array=train_y_array[train_perm],
-        env_array=train_env_array[train_perm],
+        x_array=train_x_array[perm],
+        y_array=train_y_array[perm],
+        env_array=train_env_array[perm],
         transform=coco_transform,
-        sp_array=train_sp_array[train_perm])
+        sp_array=train_sp_array[perm])
 
-    coco_dataset_val = COCODataset(
-        x_array=train_x_array[val_perm],
-        y_array=train_y_array[val_perm],
-        env_array=train_env_array[val_perm],
-        transform=coco_transform,
-        sp_array=train_sp_array[val_perm])
+    # coco_dataset_val = COCODataset(
+    #     x_array=train_x_array[val_perm],
+    #     y_array=train_y_array[val_perm],
+    #     env_array=train_env_array[val_perm],
+    #     transform=coco_transform,
+    #     sp_array=train_sp_array[val_perm])
 
     test_data_handle, _, _, _, _ = get_coco_handles(
         num_classes=num_classes,
@@ -146,7 +145,7 @@ def get_spcoco_dataset(sp_ratio_list=None, noise_ratio=None, num_classes=None, f
         transform=coco_transform,
         sp_array=test_data_handle["g"][:])
 
-    return coco_dataset_train, coco_dataset_val, coco_dataset_test
+    return coco_dataset_train, coco_dataset_test
 
 
 
@@ -157,7 +156,7 @@ class COCOcolor_LYPD:
     def data_loaders(self, **kwargs):
         setup_seed(1)
         sp_ratio_list = [float(x) for x in "0.999_0.7_0.1".split("_")]
-        self.train_dataset, self.val_dataset, self.test_dataset = get_spcoco_dataset(
+        self.train_dataset, self.test_dataset = get_spcoco_dataset(
             sp_ratio_list=sp_ratio_list,
             noise_ratio=0.05,
             num_classes=2,
@@ -174,25 +173,11 @@ class COCOcolor_LYPD:
             train_ld = torch.utils.data.DataLoader(
                 env_set,
                 batch_size=self.flags.train_batch_size,
-                shuffle=True,
-                num_workers=4)
-
-            self.train_loader.append(train_ld)
-        
-        env_sets = []
-        for i, env_p in enumerate(self.flags.training_env):
-            env_sets.append(Subset(self.val_dataset, np.where(self.val_dataset.env_array == i)[0]))
-
-        self.val_loader = []
-        for env_set in env_sets:
-            val_ld = torch.utils.data.DataLoader(
-                env_set,
-                batch_size=self.flags.eval_batch_size,
                 shuffle=False,
                 num_workers=4)
 
-            self.val_loader.append(val_ld)
-
+            self.train_loader.append(train_ld)
+ 
         self.test_loader = torch.utils.data.DataLoader(
             dataset=self.test_dataset,
             batch_size=self.flags.eval_batch_size,
