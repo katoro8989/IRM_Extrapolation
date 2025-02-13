@@ -21,7 +21,7 @@ GPU="0"
 NO_CUDA=""
 WANDB_PROJECT_NAME="ERM_CObject"
 
-SEEDS=(2020)
+SEEDS=(2020 2020)
 count=0
 
 for seed in "${SEEDS[@]}" ; do
