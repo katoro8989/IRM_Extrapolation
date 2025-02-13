@@ -172,7 +172,7 @@ class ResNet(nn.Module):
 
         num_classes = 1
         self.num_classes = 1
-        self.omega_list = []
+        self.omega_list = nn.ModuleList()
         self.env_num = env_num
         for env in range(env_num):
             omega = nn.Linear(512 * block.expansion, num_classes)
@@ -341,7 +341,7 @@ class ResNetUS(ResNet):
         )
 
         self.num_classes = num_classes
-        self.omega_list = []
+        self.omega_list = nn.ModuleList()
         self.env_num = env_num
         for env in range(env_num):
             omega = nn.Linear(512 * block.expansion, num_classes)
