@@ -2,6 +2,8 @@ from torch import nn, optim, autograd
 import pdb
 import torch
 from torchvision import datasets
+from backpack import extend
+from models.model_utils import ptv, vtp
 
 __all__ = [ 'resnet18', 'resnet34', 'resnet50', 'resnet101',
            'resnet152', 'resnext50_32x4d', 'resnext101_32x8d',
