@@ -41,12 +41,17 @@ def get_optimizer_scheduler(model, args):
     else:
         optimizer = []
         for i in range(len(args.training_env)):
-            base_optimizer_omega = torch.optim.Adam(model.omega_list[i].parameters(), lr=args.omega_lr)
-            if args.optim == "lars":
+            if args.optim == "adam":
+                base_optimizer_omega = torch.optim.Adam(model.omega_list[i].parameters(), lr=args.omega_lr)
+            elif args.optim == "sgd":
+                base_optimizer_omega = torch.optim.SGD(model.omega_list[i].parameters(), lr=args.omega_lr, momentum=0.9)
+            elif args.optim == "lars":
                 base_optimizer_omega = LARS(optimizer=base_optimizer_omega)
             optimizer.append(base_optimizer_omega)
         base_optimizer_phi = torch.optim.Adam(model.phi.parameters(), lr=args.lr)
-        if args.optim == "lars":
+        if args.optim == "sgd":
+            base_optimizer_phi = torch.optim.SGD(model.phi.parameters(), lr=args.lr, momentum=0.9)
+        elif args.optim == "lars":
             base_optimizer_phi = LARS(optimizer=base_optimizer_phi)
         optimizer.append(base_optimizer_phi)
 
@@ -58,16 +63,29 @@ def get_optimizer_scheduler(model, args):
             gamma = 0.1
 
         for i in range(len(args.training_env)):
-            scheduler.append(torch.optim.lr_scheduler.MultiStepLR(optimizer[i],
+            if args.optim == "sgd":
+                scheduler.append(torch.optim.lr_scheduler.MultiStepLR(optimizer[i],
+                                                                  milestones=[int(0.5 * args.epochs)],
+                                                                  gamma=gamma
+                                                                  ))
+            else:
+                scheduler.append(torch.optim.lr_scheduler.MultiStepLR(optimizer[i],
                                                                   milestones=[int(0.5 * args.epochs),
                                                                               int(0.75 * args.epochs)],
                                                                   gamma=gamma
                                                                   ))
-        scheduler.append(torch.optim.lr_scheduler.MultiStepLR(optimizer[-1],
-                                                              milestones=[int(0.5 * args.epochs),
-                                                                          int(0.75 * args.epochs)],
+
+        if args.optim == "sgd":
+            scheduler.append(torch.optim.lr_scheduler.MultiStepLR(optimizer[-1],
+                                                              milestones=[int(0.5 * args.epochs)],
                                                               gamma=gamma
                                                               ))
+        else:
+            scheduler.append(torch.optim.lr_scheduler.MultiStepLR(optimizer[-1],
+                                                                milestones=[int(0.5 * args.epochs),
+                                                                            int(0.75 * args.epochs)],
+                                                                gamma=gamma
+                                                                ))
 
     return optimizer, scheduler
 

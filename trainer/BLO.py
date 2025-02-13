@@ -69,7 +69,7 @@ def train(
             optimizer[env_num].zero_grad()
             omega_loss.backward()
             optimizer[env_num].step()
-            scheduler[env_num].step()
+            # scheduler[env_num].step()
 
         if stop_flag:
             break
@@ -126,7 +126,7 @@ def train(
         optimizer[-1].zero_grad()
         loss.backward()
         optimizer[-1].step()
-        scheduler[-1].step()
+        # scheduler[-1].step()
 
         losses.update(loss.item(), batch_num)
         top1.update(training_acc.item(), batch_num)
