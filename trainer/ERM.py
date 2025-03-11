@@ -45,7 +45,7 @@ def train(
             images = images.to(device)
             labels = labels.to(device)
             logits = model(images)
-            print(logits.shape, labels.shape)
+            # print(logits.shape, labels.shape)
             loss = criterion(logits, labels)
             penalty_v1_loss = penalty_v1(logits, labels)
             acc1 = mean_accuracy(logits, labels)
