@@ -8,9 +8,9 @@ class EBD(nn.Module):
       super(EBD, self).__init__()
       self.envs_num = len(flags.training_env)
       if self.flags.num_classes == 2:
-      self.embedings = torch.nn.Embedding(self.envs_num, 1)
+        self.embedings = torch.nn.Embedding(self.envs_num, 1)
       else:
-          self.embedings = torch.nn.Embedding(flags.envs_num, self.flags.num_classes)
+        self.embedings = torch.nn.Embedding(flags.envs_num, self.flags.num_classes)
       self.re_init()
 
     def re_init(self):
