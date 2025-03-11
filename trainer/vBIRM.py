@@ -59,7 +59,7 @@ def train(
             labels = labels.to(device)
             logits = model(images)
 
-            sampleN = 10
+            sampleN = 50
             train_nll = 0
             train_penalty = 0
             for i in range(sampleN):

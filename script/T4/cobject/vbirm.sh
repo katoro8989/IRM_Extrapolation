@@ -1,6 +1,6 @@
 DATASET="COCOcolor_LYPD"
-EPOCHS=80
-TRAIN_BATCH_SIZE=500
+EPOCHS=42
+TRAIN_BATCH_SIZE=250
 SEED=2020
 TRAINER="vBIRM"
 DATA_DIR="/gs/bs/tge-24IJ0078/dataset"
@@ -13,7 +13,7 @@ LABEL_FLIP_P=0.25
 WD=0.00110794568
 PENALTY_WEIGHT=10000
 LR=0.01
-WARM_START=8
+WARM_START=3
 OMEGA_LR=0.1
 PRINT_FREQ=100
 RESULT_DIR="./results"
@@ -48,6 +48,8 @@ for var_beta in "${VAR_BETAS[@]}" ; do
                 --print_freq ${PRINT_FREQ} \
                 --wandb_project_name ${WANDB_PROJECT_NAME} \
                 --var_beta ${var_beta} \
+                --prior_sd_coef ${PRIOR_SD_COEF} \
+                --data_num ${DATA_NUM} \
                 "
 
     CMD="qsub -g tge-24IJ0078 run.sh ${SHELL_ARGS}"
