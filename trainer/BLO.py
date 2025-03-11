@@ -74,7 +74,7 @@ def train(
         if stop_flag:
             break
 
-        model.average_omega()
+        # model.average_omega()
 
         for env_num, (images, labels) in enumerate(zip(images_full, labels_full)):
             model.clear_phi_grad()
@@ -142,6 +142,6 @@ def train(
         if iter_num % args.print_freq == 0:
             progress.display(iter_num)
 
-        # model.average_omega()
+        model.average_omega()
 
     return [top1.avg, losses.avg, penalty_v0_losses.avg, penalty_v1_losses.avg, penalty_stationary_losses.avg, reg_losses.avg, eces.avg, aces.avg]
