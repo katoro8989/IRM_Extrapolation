@@ -20,11 +20,12 @@ class PACS_FROM_DOMAINBED:
         hparams = {
             "data_augmentation": True,
         }
-        pacs_class = PACS(self.flags.data_dir, self.flags.test_envs, hparams)
+        test_envs = [self.flags.test_envs]
+        pacs_class = PACS(self.flags.data_dir, test_envs, hparams)
 
         self.train_loader = []
         for i, env_set in enumerate(pacs_class):
-            if i == self.flags.test_envs:
+            if i == self.flags.test_env:
                 self.test_loader = torch.utils.data.DataLoader(
                     dataset=env_set,
                     batch_size=self.flags.eval_batch_size,
