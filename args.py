@@ -47,6 +47,8 @@ def parse_args():
 
     parser.add_argument('--wd', type=float, default=0.00110794568)
 
+    parser.add_argument('--num_classes', type=int, default=2)
+
     # Training Method Details
 
     parser.add_argument('--penalty_weight', type=float, default=91257.18613115903)

@@ -20,6 +20,7 @@ RESULT_DIR="./results"
 GPU="0"
 NO_CUDA=""
 WANDB_PROJECT_NAME="IRMv1_PACS"
+NUM_CLASSES=7
 
 SEEDS=(2020)
 count=0
@@ -43,6 +44,7 @@ for seed in "${SEEDS[@]}" ; do
                 --print_freq ${PRINT_FREQ} \
                 --wandb_project_name ${WANDB_PROJECT_NAME} \
                 --arch "resnet18" \
+                --num_classes ${NUM_CLASSES} \
                 "
 
     CMD="qsub -g tge-24IJ0078 run.sh ${SHELL_ARGS}"

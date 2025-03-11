@@ -20,6 +20,7 @@ RESULT_DIR="./results"
 GPU="0"
 NO_CUDA=""
 WANDB_PROJECT_NAME="BIRM_PACS"
+NUM_CLASSES=7
 
 PRIOR_SD_COEF=1000
 DATA_NUM=8321
@@ -47,6 +48,7 @@ for seed in "${SEEDS[@]}" ; do
                 --wandb_project_name ${WANDB_PROJECT_NAME} \
                 --prior_sd_coef ${PRIOR_SD_COEF} \
                 --data_num ${DATA_NUM} \
+                --num_classes ${NUM_CLASSES} \
                 "
 
     CMD="qsub -g tge-24IJ0078 run.sh ${SHELL_ARGS}"

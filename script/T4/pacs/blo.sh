@@ -20,6 +20,7 @@ RESULT_DIR="./results"
 GPU="0"
 NO_CUDA=""
 WANDB_PROJECT_NAME="BLO_PACS"
+NUM_CLASSES=7
 
 SEEDS=(2020)
 LRS=(0.1)
@@ -43,6 +44,7 @@ for seed in "${SEEDS[@]}" ; do
                 --omega_lr ${OMEGA_LR} \
                 --print_freq ${PRINT_FREQ} \
                 --wandb_project_name ${WANDB_PROJECT_NAME} \
+                --num_classes ${NUM_CLASSES} \
                 "
 
     CMD="qsub -g tge-24IJ0078 run.sh ${SHELL_ARGS}"
