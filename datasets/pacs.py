@@ -20,7 +20,7 @@ class PACS_FROM_DOMAINBED:
         hparams = {
             "data_augmentation": True,
         }
-        test_envs = [self.flags.test_envs]
+        test_envs = [self.flags.test_env]
         pacs_class = PACS(self.flags.data_dir, test_envs, hparams)
 
         self.train_loader = []
