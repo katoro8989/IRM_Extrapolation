@@ -84,9 +84,9 @@ def get_coco_handles(num_classes=2, sp_ratio_list=None, noise_ratio=0, dataset='
 
     dirname = os.path.join(data_dir,  dataset_name)
 
-    print('Copying data over, this will be worth it, be patient ...', end=' ')
-    subprocess.call(['rsync', '-r', original_dirname, data_dir])
-    print('Done!')
+    # print('Copying data over, this will be worth it, be patient ...', end=' ')
+    # subprocess.call(['rsync', '-r', original_dirname, data_dir])
+    # print('Done!')
 
     if train_test == "train":
         train_file = h5py.File(dirname+'/train.h5py', mode='r')
