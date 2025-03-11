@@ -12,9 +12,9 @@ TEST_ENV=0.01
 LABEL_FLIP_P=0.25
 WD=0.00110794568
 PENALTY_WEIGHT=10000
-LR=0.1
+LR=0.01
 WARM_START=3
-OMEGA_LR=0.1
+OMEGA_LR=0.01
 PRINT_FREQ=100
 RESULT_DIR="./results"
 GPU="0"
@@ -22,13 +22,14 @@ NO_CUDA=""
 WANDB_PROJECT_NAME="BLO_CObject"
 
 SEEDS=(2020)
+LRS=(0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.1)
 count=0
 
-for seed in "${SEEDS[@]}" ; do
+for lr in "${LRS[@]}" ; do
     SHELL_ARGS="--dataset ${DATASET} \
                 --epochs ${EPOCHS} \
                 --train_batch_size ${TRAIN_BATCH_SIZE} \
-                --seed ${seed} \
+                --seed ${SEED} \
                 --trainer ${TRAINER} \
                 --data_dir ${DATA_DIR} \
                 --optim ${OPTIM} \
@@ -37,9 +38,9 @@ for seed in "${SEEDS[@]}" ; do
                 --test_env ${TEST_ENV} \
                 --wd ${WD} \
                 --penalty_weight ${PENALTY_WEIGHT} \
-                --lr ${LR} \
+                --lr ${lr} \
                 --warm_start ${WARM_START} \
-                --omega_lr ${OMEGA_LR} \
+                --omega_lr ${lr} \
                 --print_freq ${PRINT_FREQ} \
                 --wandb_project_name ${WANDB_PROJECT_NAME} \
                 "
