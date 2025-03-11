@@ -216,11 +216,6 @@ class ResNet(nn.Module):
 
         return nn.Sequential(*layers)
 
-    def forward(self, x):
-
-        x = self.encoder(x)
-        self.fp = x
-        return self.class_classifier(x)
 
     def forward(self, input, env_num=0):
         out = self.phi(input)
