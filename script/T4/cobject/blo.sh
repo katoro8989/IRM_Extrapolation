@@ -22,7 +22,7 @@ NO_CUDA=""
 WANDB_PROJECT_NAME="BLO_CObject"
 
 SEEDS=(2020)
-LRS=(0.1)
+LRS=(0.01)
 count=0
 
 for lr in "${LRS[@]}" ; do
