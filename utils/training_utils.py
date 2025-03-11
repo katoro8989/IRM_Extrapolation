@@ -115,6 +115,16 @@ def penalty_v1(logits, y):
     grad = autograd.grad(loss, [scale], create_graph=True)[0]
     return torch.sum(grad ** 2)
 
+def penalty_v1b(logits, y):
+    device = get_device(logits)
+    scale = torch.tensor(1.).to(device).requires_grad_()
+    loss_1 = criterion(logits[::2] * scale, y[::2])
+    loss_2 = criterion(logits[1::2] * scale, y[1::2])
+    grad_1 = autograd.grad(loss_1, [scale], create_graph=True)[0]
+    grad_2 = autograd.grad(loss_2, [scale], create_graph=True)[0]
+    result = torch.sum(grad_1 * grad_2)
+    return result
+
 
 def penalty_v0(model, x, y, env_num=0):
     z = model(x, env_num=-1)

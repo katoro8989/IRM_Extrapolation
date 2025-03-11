@@ -3,7 +3,7 @@ import torch
 import numpy as np
 
 from utils.general_utils import AverageMeter, ProgressMeter
-from utils.training_utils import criterion, penalty_v1, mean_accuracy, penalty_stationary, penalty_v0, calc_ece_ace, get_maxprob_and_onehot, init_config
+from utils.training_utils import criterion, penalty_v1, penalty_v1b, mean_accuracy, penalty_stationary, penalty_v0, calc_ece_ace, get_maxprob_and_onehot, init_config
 
 def train(
         model, args, device, train_loaders, optimizer, scheduler, epoch
@@ -57,6 +57,10 @@ def train(
             loss = criterion(logits, labels)
 
             envs[env_num]["loss"] = loss
+            # if args.dataset in ["CMNIST", "CFMNIST"]:
+            #     envs[env_num]["penalty_v1"] = penalty_v1(logits, labels)
+            # else:
+            #     envs[env_num]["penalty_v1"] = penalty_v1b(logits, labels)
             envs[env_num]["penalty_v1"] = penalty_v1(logits, labels)
             envs[env_num]["penalty_v0"] = penalty_v0(model, images, labels)
             envs[env_num]["penalty_stationary"] = penalty_stationary(model, images, labels, 0)

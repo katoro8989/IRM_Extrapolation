@@ -54,11 +54,13 @@ def main():
     env_num = 1 if "BLO" not in args.trainer else len(args.training_env)
 
     if "MNIST" in args.dataset:
+        print("Using MLP")
         model = models.__dict__[args.arch](
             env_num=env_num,
             use_color=True if len(args.training_color_env) > 0 else False
         )
     else:
+        print("Using ResNet18")
         model = models.ResNet.resnet18_sepfc_us(
                 pretrained=False,
                 num_classes=1,
