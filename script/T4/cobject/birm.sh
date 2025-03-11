@@ -45,6 +45,8 @@ for seed in "${SEEDS[@]}" ; do
                 --omega_lr ${OMEGA_LR} \
                 --print_freq ${PRINT_FREQ} \
                 --wandb_project_name ${WANDB_PROJECT_NAME} \
+                --prior_sd_coef ${PRIOR_SD_COEF} \
+                --data_num ${DATA_NUM} \
                 "
 
     CMD="qsub -g tge-24IJ0078 run.sh ${SHELL_ARGS}"
