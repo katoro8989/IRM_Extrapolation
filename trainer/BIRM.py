@@ -59,7 +59,7 @@ def train(
             labels = labels.to(device)
             logits = model(images)
 
-            sampleN = 10
+            sampleN = 50
             train_nll = 0
             train_penalty = 0
             for i in range(sampleN):
@@ -72,6 +72,7 @@ def train(
                     create_graph=True)[0]
                 train_penalty +=  1/sampleN * torch.mean(grad**2)
                 train_nll += 1/sampleN * train_nll_env
+           
 
             envs[env_num]["loss"] = train_nll
             envs[env_num]["penalty_v1"] = penalty_v1(logits, labels)
