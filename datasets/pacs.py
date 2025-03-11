@@ -10,7 +10,7 @@ import h5py
 from PIL import Image
 
 from utils.general_utils import setup_seed
-from domains.domainbed import PACS
+from datasets.domainbed_dataset import PACS
 
 class PACS_FROM_DOMAINBED:
     def __init__(self, flags):
