@@ -76,8 +76,8 @@ def train(
 
             envs[env_num]["loss"] = train_nll
             envs[env_num]["penalty_v1"] = penalty_v1(logits, labels)
-            envs[env_num]["penalty_v0"] = 0
-            envs[env_num]["penalty_stationary"] = 0
+            envs[env_num]["penalty_v0"] = torch.tensor(0.0)
+            envs[env_num]["penalty_stationary"] = torch.tensor(0.0)
             envs[env_num]["acc"] = mean_accuracy(logits, labels)
             envs[env_num]["penalty_birm"] = train_penalty
 
