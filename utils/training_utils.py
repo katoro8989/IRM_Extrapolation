@@ -29,7 +29,8 @@ def get_optimizer_scheduler(model, args):
 
         if args.optim == "sgd":
             scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,
-                                                            milestones=[int(0.5 * args.epochs)],
+                                                            # milestones=[int(0.5 * args.epochs)],
+                                                            milestones=[int(0.5 * args.epochs), int(0.75 * args.epochs)],
                                                             gamma=gamma
                                                             )
         else:
