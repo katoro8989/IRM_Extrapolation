@@ -56,7 +56,7 @@ def train(
             logits = model(images)
             loss = criterion(logits, labels)
 
-            # envs[env_num]["loss"] = loss
+            envs[env_num]["loss"] = loss
             # if args.dataset in ["CMNIST", "CFMNIST"]:
             #     envs[env_num]["penalty_v1"] = penalty_v1(logits, labels)
             # else:
