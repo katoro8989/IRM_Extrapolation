@@ -97,8 +97,8 @@ def get_device(tensor):
 
 
 def criterion(logits, y):
-    # return torch.nn.CrossEntropyLoss()(logits, y.view(-1))
-    return torch.nn.functional.binary_cross_entropy_with_logits(logits, y.float())
+    return torch.nn.CrossEntropyLoss()(logits, y.view(-1))
+    # return torch.nn.functional.binary_cross_entropy_with_logits(logits, y.float())
 
 
 def mean_accuracy(logits, y):
