@@ -131,14 +131,14 @@ def main():
         if isinstance(optimizer, list):
             phi_lr = optimizer[-1].param_groups[0]["lr"]
             omega_lr = optimizer[-2].param_groups[0]["lr"]
-            step = scheduler[-1]._step_count
+            step = optimizer[-1]._step_count
             wandb_log_dist["phi_lr"] = phi_lr
             wandb_log_dist["omega_lr"] = omega_lr
             wandb_log_dist["step"] = step
         else:
             lr = optimizer.param_groups[0]["lr"]
             wandb_log_dist["lr"] = lr
-            step = scheduler._step_count
+            step = optimizer._step_count
             wandb_log_dist["step"] = step
 
 
