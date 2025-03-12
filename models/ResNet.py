@@ -1,9 +1,14 @@
 from torch import nn, optim, autograd
 import pdb
 import torch
+try:
+    from torch.hub import load_state_dict_from_url
+except ImportError:
+    from torchvision.models.utils import load_state_dict_from_url
 from torchvision import datasets
 from backpack import extend
 from models.model_utils import ptv, vtp
+
 
 __all__ = [ 'resnet18', 'resnet34', 'resnet50', 'resnet101',
            'resnet152', 'resnext50_32x4d', 'resnext101_32x8d',
