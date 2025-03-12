@@ -11,7 +11,7 @@ class EBD(nn.Module):
       if self.flags.num_classes == 2:
         self.embedings = torch.nn.Embedding(self.envs_num, 1)
       else:
-        self.embedings = torch.nn.Embedding(flags.envs_num, self.flags.num_classes)
+        self.embedings = torch.nn.Embedding(self.envs_num, self.flags.num_classes)
       self.re_init()
 
     def re_init(self):
