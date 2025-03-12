@@ -62,7 +62,7 @@ def main():
     elif args.dataset == "PACS_FROM_DOMAINBED":
         print("Using ResNet18")
         model = models.ResNet.resnet18_sepfc_us(
-                pretrained=False,
+                pretrained=True,
                 num_classes=7,
                 env_num=env_num)
     elif args.dataset == "VLCS_FROM_DOMAINBED":
