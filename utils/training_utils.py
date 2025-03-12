@@ -25,7 +25,8 @@ def get_optimizer_scheduler(model, args):
         if args.dataset == "CFMNIST" or args.dataset == "CMNIST":
             gamma = 1.0
         else:
-            gamma = 0.1
+            # gamma = 0.1
+            gamma = 1.0
 
         if args.optim == "sgd":
             scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,
