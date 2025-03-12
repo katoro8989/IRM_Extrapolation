@@ -25,8 +25,8 @@ class EBD(nn.Module):
         self.embedings.weight.data = rd.view(-1, 1).cuda()
       else:
         rd = torch.normal(
-          torch.Tensor([1.0] * self.flags.envs_num * self.flags.num_classes),
-          torch.Tensor([noise_sd] * self.flags.envs_num* self.flags.num_classes))
+          torch.Tensor([1.0] * self.envs_num * self.flags.num_classes),
+          torch.Tensor([noise_sd] * self.envs_num* self.flags.num_classes))
         self.embedings.weight.data = rd.view(-1, self.flags.num_classes).cuda()
 
     def forward(self, e):
