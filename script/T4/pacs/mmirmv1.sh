@@ -24,13 +24,14 @@ NUM_CLASSES=7
 
 SEEDS=(2021 2022)
 ALPHA_MM=(-0.1 -0.2 -0.3 -0.4 -0.5 -0.6 -0.7 -0.8 -0.9 -1.0)
+alpha_mm=-0.2
 count=0
 
-for alpha_mm in "${ALPHA_MM[@]}" ; do
+for seed in "${SEEDS[@]}" ; do
     SHELL_ARGS="--dataset ${DATASET} \
                 --epochs ${EPOCHS} \
                 --train_batch_size ${TRAIN_BATCH_SIZE} \
-                --seed ${SEED} \
+                --seed ${seed} \
                 --trainer ${TRAINER} \
                 --data_dir ${DATA_DIR} \
                 --optim ${OPTIM} \
