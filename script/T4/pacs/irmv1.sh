@@ -22,7 +22,7 @@ NO_CUDA=""
 WANDB_PROJECT_NAME="IRMv1_PACS"
 NUM_CLASSES=7
 
-SEEDS=(2020)
+SEEDS=(2021 2022)
 count=0
 
 for seed in "${SEEDS[@]}" ; do
