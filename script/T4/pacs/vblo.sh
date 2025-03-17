@@ -2,7 +2,7 @@ DATASET="PACS_FROM_DOMAINBED"
 EPOCHS=200
 TRAIN_BATCH_SIZE=32
 SEED=2020
-TRAINER="BLO"
+TRAINER="vBLO"
 DATA_DIR="/gs/bs/tge-24IJ0078/dataset"
 OPTIM="adam"
 TRAINING_ENV="0 1 3"
@@ -23,14 +23,15 @@ WANDB_PROJECT_NAME="vBLO_PACS"
 NUM_CLASSES=7
 
 SEEDS=(2020)
+VAR_BETAS=(1e-1 2e-1 3e-1 4e-1 5e-1 6e-1 7e-1 8e-1 9e-1)
 LRS=(0.1)
 count=0
 
-for seed in "${SEEDS[@]}" ; do
+for var_beta in "${VAR_BETAS[@]}" ; do
     SHELL_ARGS="--dataset ${DATASET} \
                 --epochs ${EPOCHS} \
                 --train_batch_size ${TRAIN_BATCH_SIZE} \
-                --seed ${seed} \
+                --seed ${SEED} \
                 --trainer ${TRAINER} \
                 --data_dir ${DATA_DIR} \
                 --optim ${OPTIM} \
@@ -45,6 +46,7 @@ for seed in "${SEEDS[@]}" ; do
                 --print_freq ${PRINT_FREQ} \
                 --wandb_project_name ${WANDB_PROJECT_NAME} \
                 --num_classes ${NUM_CLASSES} \
+                --var_beta ${var_beta} \
                 "
 
     CMD="qsub -g tge-24IJ0078 run.sh ${SHELL_ARGS}"

@@ -2,7 +2,7 @@ DATASET="PACS_FROM_DOMAINBED"
 EPOCHS=200
 TRAIN_BATCH_SIZE=32
 SEED=2020
-TRAINER="BLO"
+TRAINER="mmBLO"
 DATA_DIR="/gs/bs/tge-24IJ0078/dataset"
 OPTIM="adam"
 TRAINING_ENV="0 1 3"
@@ -27,11 +27,11 @@ SEEDS=(2020)
 LRS=(0.1)
 count=0
 
-for seed in "${SEEDS[@]}" ; do
+for alpha_mm in "${ALPHA_MM[@]}" ; do
     SHELL_ARGS="--dataset ${DATASET} \
                 --epochs ${EPOCHS} \
                 --train_batch_size ${TRAIN_BATCH_SIZE} \
-                --seed ${seed} \
+                --seed ${SEED} \
                 --trainer ${TRAINER} \
                 --data_dir ${DATA_DIR} \
                 --optim ${OPTIM} \
@@ -46,6 +46,7 @@ for seed in "${SEEDS[@]}" ; do
                 --print_freq ${PRINT_FREQ} \
                 --wandb_project_name ${WANDB_PROJECT_NAME} \
                 --num_classes ${NUM_CLASSES} \
+                --alpha_mm ${alpha_mm} \
                 "
 
     CMD="qsub -g tge-24IJ0078 run.sh ${SHELL_ARGS}"
