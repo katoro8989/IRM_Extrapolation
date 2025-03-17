@@ -65,6 +65,9 @@ def train(
             for i in range(sampleN):
                 ebd.re_init_with_noise(args.prior_sd_coef/args.data_num)
                 train_g = torch.tensor(env_num).to(device)
+                print(ebd(train_g).shape)
+                print(ebd(train_g).view(-1, 1).shape)
+                print(logits.shape)
                 train_logits_w = ebd(train_g).view(-1, 1)*logits
                 train_nll_env = criterion(train_logits_w, labels)
                 grad = autograd.grad(
