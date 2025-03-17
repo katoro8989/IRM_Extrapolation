@@ -1,8 +1,9 @@
-DATASET="PACS_FROM_DOMAINBED"
+DATASET="VLCS_FROM_DOMAINBED"
+ARCH="resnet18"
 EPOCHS=200
 TRAIN_BATCH_SIZE=32
 SEED=2020
-TRAINER="BLO"
+TRAINER="IRM"
 DATA_DIR="/gs/bs/tge-24IJ0078/dataset"
 OPTIM="adam"
 TRAINING_ENV="0 1 3"
@@ -11,19 +12,18 @@ TRAINING_COLOR_ENV=""
 TEST_ENV=2
 LABEL_FLIP_P=0.25
 WD=0.00110794568
-PENALTY_WEIGHT=1
+PENALTY_WEIGHT=0
 LR=5e-4
-WARM_START=50
-OMEGA_LR=5e-4
+WARM_START=0
+OMEGA_LR=0.002
 PRINT_FREQ=100
 RESULT_DIR="./results"
 GPU="0"
 NO_CUDA=""
-WANDB_PROJECT_NAME="BLO_PACS"
+WANDB_PROJECT_NAME="ERM_PACS"
 NUM_CLASSES=7
 
-SEEDS=(2021 2022) 
-LRS=(0.1)
+SEEDS=(2021 2022)
 count=0
 
 for seed in "${SEEDS[@]}" ; do
@@ -44,6 +44,7 @@ for seed in "${SEEDS[@]}" ; do
                 --omega_lr ${OMEGA_LR} \
                 --print_freq ${PRINT_FREQ} \
                 --wandb_project_name ${WANDB_PROJECT_NAME} \
+                --arch "resnet18" \
                 --num_classes ${NUM_CLASSES} \
                 "
 
