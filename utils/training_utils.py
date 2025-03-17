@@ -72,8 +72,9 @@ def get_optimizer_scheduler(model, args):
                                                                   ))
             else:
                 scheduler.append(torch.optim.lr_scheduler.MultiStepLR(optimizer[i],
-                                                                  milestones=[int(0.5 * args.epochs),
-                                                                              int(0.75 * args.epochs)],
+                                                                #   milestones=[int(0.5 * args.epochs),
+                                                                #               int(0.75 * args.epochs)],
+                                                                  milestones=[int(0.75 * args.epochs)],
                                                                   gamma=gamma
                                                                   ))
 
@@ -84,8 +85,9 @@ def get_optimizer_scheduler(model, args):
                                                               ))
         else:
             scheduler.append(torch.optim.lr_scheduler.MultiStepLR(optimizer[-1],
-                                                                milestones=[int(0.5 * args.epochs),
-                                                                            int(0.75 * args.epochs)],
+                                                                # milestones=[int(0.5 * args.epochs),
+                                                                            # int(0.75 * args.epochs)],
+                                                                milestones=[int(0.75 * args.epochs)],
                                                                 gamma=gamma
                                                                 ))
 
