@@ -24,7 +24,7 @@ NUM_CLASSES=7
 
 SEEDS=(2021 2022)
 VAR_BETAS=(1e-1 2e-1 4e-1 5e-1 7e-1 8e-1)
-var_beta=0.2
+var_beta=0.4
 LRS=(0.1)
 count=0
 
