@@ -84,6 +84,8 @@ def main():
     D = datasets.__dict__[args.dataset](args)
     train_loader, test_loader = D.data_loaders()
 
+    
+
     # setup_seed(args.seed)
     # # del model from gpu
     # del model

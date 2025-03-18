@@ -26,12 +26,14 @@ class VLCS_FROM_DOMAINBED:
         self.train_loader = []
         for i, env_set in enumerate(vlcs_class):
             if i == self.flags.test_env:
+                print("len of test env: ", len(env_set))
                 self.test_loader = torch.utils.data.DataLoader(
                     dataset=env_set,
                     batch_size=self.flags.eval_batch_size,
                     shuffle=False,
                     num_workers=4)
                 continue
+            print("len of train env: ", len(env_set))
             train_ld = torch.utils.data.DataLoader(
                 env_set,
                 batch_size=self.flags.train_batch_size,
