@@ -3,7 +3,7 @@ ARCH="resnet18"
 EPOCHS=200
 TRAIN_BATCH_SIZE=32
 SEED=2020
-TRAINER="IRM"
+TRAINER="vBIRM"
 DATA_DIR="/gs/bs/tge-24IJ0078/dataset"
 OPTIM="adam"
 TRAINING_ENV="0 1 3"
@@ -20,17 +20,21 @@ PRINT_FREQ=100
 RESULT_DIR="./results"
 GPU="0"
 NO_CUDA=""
-WANDB_PROJECT_NAME="IRMv1_VLCS"
+WANDB_PROJECT_NAME="vBIRM_VLCS"
 NUM_CLASSES=5
 
-SEEDS=(2021 2022)
+PRIOR_SD_COEF=1000
+DATA_NUM=7447
+
+SEEDS=(2020)
+VAR_BETAS=(1e-1 2e-1 3e-1 4e-1 5e-1 6e-1 7e-1 8e-1 9e-1)
 count=0
 
-for seed in "${SEEDS[@]}" ; do
+for var_beta in "${VAR_BETAS[@]}" ; do
     SHELL_ARGS="--dataset ${DATASET} \
                 --epochs ${EPOCHS} \
                 --train_batch_size ${TRAIN_BATCH_SIZE} \
-                --seed ${seed} \
+                --seed ${SEED} \
                 --trainer ${TRAINER} \
                 --data_dir ${DATA_DIR} \
                 --optim ${OPTIM} \
@@ -46,6 +50,9 @@ for seed in "${SEEDS[@]}" ; do
                 --wandb_project_name ${WANDB_PROJECT_NAME} \
                 --arch "resnet18" \
                 --num_classes ${NUM_CLASSES} \
+                --prior_sd_coef ${PRIOR_SD_COEF} \
+                --data_num ${DATA_NUM} \
+                --var_beta ${var_beta} \
                 "
 
     CMD="qsub -g tge-24IJ0078 run.sh ${SHELL_ARGS}"

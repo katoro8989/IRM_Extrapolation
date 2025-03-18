@@ -26,7 +26,7 @@ NUM_CLASSES=5
 PRIOR_SD_COEF=1000
 DATA_NUM=7447
 
-SEEDS=(2020)
+SEEDS=(2021 2022)
 count=0
 
 for seed in "${SEEDS[@]}" ; do

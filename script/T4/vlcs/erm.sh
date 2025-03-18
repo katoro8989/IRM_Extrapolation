@@ -23,7 +23,7 @@ NO_CUDA=""
 WANDB_PROJECT_NAME="ERM_VLCS"
 NUM_CLASSES=5
 
-SEEDS=(2020)
+SEEDS=(2021 2022)
 count=0
 
 for seed in "${SEEDS[@]}" ; do
