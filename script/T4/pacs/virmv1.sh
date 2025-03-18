@@ -24,7 +24,7 @@ NUM_CLASSES=7
 
 SEEDS=(2021 2022)
 VAR_BETAS=(1e-1 2e-1 3e-1 4e-1 5e-1 6e-1 7e-1 8e-1 9e-1)
-var_beta=0.8
+var_beta=0.9
 count=0
 
 for seed in "${SEEDS[@]}" ; do

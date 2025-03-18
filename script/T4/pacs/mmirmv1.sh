@@ -24,7 +24,7 @@ NUM_CLASSES=7
 
 SEEDS=(2021 2022)
 ALPHA_MM=(-0.1 -0.2 -0.3 -0.4 -0.5 -0.6 -0.7 -0.8 -0.9 -1.0)
-alpha_mm=-0.2
+alpha_mm=-0.1
 count=0
 
 for seed in "${SEEDS[@]}" ; do
