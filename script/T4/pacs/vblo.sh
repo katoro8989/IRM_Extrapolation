@@ -23,7 +23,7 @@ WANDB_PROJECT_NAME="vBLO_PACS"
 NUM_CLASSES=7
 
 SEEDS=(2020)
-VAR_BETAS=(1e-1 2e-1 3e-1 4e-1 5e-1 6e-1 7e-1 8e-1 9e-1)
+VAR_BETAS=(1e-1 2e-1 4e-1 5e-1 7e-1 8e-1)
 LRS=(0.1)
 count=0
 
