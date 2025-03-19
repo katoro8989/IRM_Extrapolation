@@ -24,36 +24,37 @@ WANDB_PROJECT_NAME="mmIRMv1_VLCS"
 NUM_CLASSES=5
 
 SEEDS=(2021 2022)
-ALPHA_MM=(-0.1 -0.2 -0.3 -0.4 -0.5 -0.6 -0.7 -0.8 -0.9 -1.0)
+ALPHA_MM=(-0.1 -0.3)
 count=0
 
 for alpha_mm in "${ALPHA_MM[@]}" ; do
-    SHELL_ARGS="--dataset ${DATASET} \
-                --epochs ${EPOCHS} \
-                --train_batch_size ${TRAIN_BATCH_SIZE} \
-                --seed ${SEED} \
-                --trainer ${TRAINER} \
-                --data_dir ${DATA_DIR} \
-                --optim ${OPTIM} \
-                --save \
-                --training_env ${TRAINING_ENV} \
-                --test_env ${TEST_ENV} \
-                --wd ${WD} \
-                --penalty_weight ${PENALTY_WEIGHT} \
-                --lr ${LR} \
-                --warm_start ${WARM_START} \
-                --omega_lr ${OMEGA_LR} \
-                --print_freq ${PRINT_FREQ} \
-                --wandb_project_name ${WANDB_PROJECT_NAME} \
-                --arch "resnet18" \
-                --num_classes ${NUM_CLASSES} \
-                --alpha_mm ${alpha_mm} \
-                "
+    for seed in "${SEEDS[@]}" ; do
+        SHELL_ARGS="--dataset ${DATASET} \
+                    --epochs ${EPOCHS} \
+                    --train_batch_size ${TRAIN_BATCH_SIZE} \
+                    --seed ${seed} \
+                    --trainer ${TRAINER} \
+                    --data_dir ${DATA_DIR} \
+                    --optim ${OPTIM} \
+                    --save \
+                    --training_env ${TRAINING_ENV} \
+                    --test_env ${TEST_ENV} \
+                    --wd ${WD} \
+                    --penalty_weight ${PENALTY_WEIGHT} \
+                    --lr ${LR} \
+                    --warm_start ${WARM_START} \
+                    --omega_lr ${OMEGA_LR} \
+                    --print_freq ${PRINT_FREQ} \
+                    --wandb_project_name ${WANDB_PROJECT_NAME} \
+                    --arch "resnet18" \
+                    --num_classes ${NUM_CLASSES} \
+                    --alpha_mm ${alpha_mm} \
+                    "
 
-    CMD="qsub -g tge-24IJ0078 run.sh ${SHELL_ARGS}"
-    echo "Exp-$((count + 1)): ${CMD}"
-    eval $CMD
+        CMD="qsub -g tge-24IJ0078 run.sh ${SHELL_ARGS}"
+        echo "Exp-$((count + 1)): ${CMD}"
+        eval $CMD
 
-    count=$((count += 1))
-            
+        count=$((count += 1))
+    done 
 done
