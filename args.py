@@ -71,7 +71,7 @@ def parse_args():
     parser.add_argument('--result_dir', type=str, default="./results")
 
     parser.add_argument('--wandb_project_name', type=str, default="BLO")
-    parser.add_argument('--wandb_entity_name', type=str, default="katoro13")
+    parser.add_argument('--wandb_entity_name', type=str, default="xxx")
 
     parser.add_argument(
         "--gpu", type=str, default="0", help="Comma separated list of GPU ids"
