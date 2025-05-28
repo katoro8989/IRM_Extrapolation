@@ -1,5 +1,5 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
-
+from collections import defaultdict
 from torchvision.datasets import MNIST
 import xml.etree.ElementTree as ET
 from zipfile import ZipFile
