@@ -154,7 +154,7 @@ def download_domain_net(data_dir):
     for url in urls:
        download_and_extract(url, os.path.join(full_path, url.split("/")[-1]))
 
-    with open("domainbed/misc/domain_net_duplicates.txt", "r") as f:
+    with open("datasets/domain_net_duplicates.txt", "r") as f:
         for line in f.readlines():
             try:
                 os.remove(os.path.join(full_path, line.strip()))
