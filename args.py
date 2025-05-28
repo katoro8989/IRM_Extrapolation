@@ -11,7 +11,16 @@ def parse_args():
 
     # General Training Settings
 
-    parser.add_argument('--dataset', type=str, default="CMNIST", choices=["CMNIST", "CFMNIST", "COCOcolor_LYPD", "PACS_FROM_DOMAINBED", "VLCS_FROM_DOMAINBED"])
+    parser.add_argument('--dataset', 
+                        type=str, 
+                        default="CMNIST", 
+                        choices=["CMNIST", 
+                                 "CFMNIST", 
+                                 "COCOcolor_LYPD", 
+                                 "PACS_FROM_DOMAINBED", 
+                                 "VLCS_FROM_DOMAINBED", 
+                                 "DomainNet_FROM_DOMAINBED", 
+                                 "TerraIncognita_FROM_DOMAINBED"])
 
     parser.add_argument('--epochs', type=int, default=200)
 
