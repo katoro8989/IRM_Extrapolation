@@ -74,13 +74,13 @@ def main():
     elif args.dataset == "DomainNet_FROM_DOMAINBED":
         print("Using ResNet50")
         model = models.ResNet.resnet50_sepfc_us(
-                pretrained=False,
+                pretrained=True,
                 num_classes=345,
                 env_num=env_num)
     elif args.dataset == "TerraIncognita_FROM_DOMAINBED":
         print("Using ResNet50")
         model = models.ResNet.resnet50_sepfc_us(
-                pretrained=False,
+                pretrained=True,
                 num_classes=10,
                 env_num=env_num)   
     else:
