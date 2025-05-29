@@ -1,7 +1,7 @@
 #!/bin/sh
 #$ -cwd
-#$ -l cpu_160=1
-#$ -l h_rt=02:00:00
+#$ -l cpu_16=1
+#$ -l h_rt=01:00:00
 #$ -o results/$JOB_ID.out
 #$ -e results/$JOB_ID.err
 #$ -N irmv1_vrex.sh
