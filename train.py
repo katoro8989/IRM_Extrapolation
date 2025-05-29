@@ -8,7 +8,7 @@ import wandb
 
 from args import parse_args
 
-from utils.training_utils import get_test_acc, analyze_acc, get_optimizer_scheduler, get_test_acc_ece_ace
+from utils.training_utils import get_test_acc, analyze_acc, get_optimizer_scheduler, get_test_acc_ece_ace, MovingAverage
 from utils.general_utils import parse_configs_file, setup_seed, save_checkpoint, get_exp_name, get_data_per_epoch, plot_trajectory
 import datasets
 import models
@@ -117,6 +117,12 @@ def main():
     # Optimizer & Scheduler
     optimizer, scheduler = get_optimizer_scheduler(model, args)
 
+    if args.trainer == "FISHR":
+        ema_per_domain = [
+            MovingAverage(ema=args.ema, oneminusema_correction=True)
+            for _ in range(len(args.training_env))
+        ]
+
     # Train loop
     best_epoch = 0
     best_diff = 100.0
@@ -126,9 +132,14 @@ def main():
     for epoch in range(args.start_epoch, args.epochs):
         start_time = time.time()
 
-        train_stat = trainer(
-            model, args, device, train_loader, optimizer, scheduler, epoch
-        )
+        if args.trainer == "FISHR":
+            train_stat = trainer(
+                model, args, device, train_loader, optimizer, scheduler, epoch, ema_per_domain
+            )
+        else:
+            train_stat = trainer(
+                model, args, device, train_loader, optimizer, scheduler, epoch
+            )
         
         if isinstance(scheduler, list):
             for schedule in scheduler:

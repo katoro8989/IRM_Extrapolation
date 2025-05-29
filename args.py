@@ -96,5 +96,7 @@ def parse_args():
     parser.add_argument('--var_beta', type=float, default=10)
     parser.add_argument('--alpha_mm', type=float, default=10)
 
+    parser.add_argument('--ema', type=float, default=0.95)
+
     return parser.parse_args()
 
