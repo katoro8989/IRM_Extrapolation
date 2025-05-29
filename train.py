@@ -82,7 +82,13 @@ def main():
         model = models.ResNet.resnet50_sepfc_us(
                 pretrained=True,
                 num_classes=10,
-                env_num=env_num)   
+                env_num=env_num)
+    elif args.dataset == "Camelyon_FROM_DOMAINBED":
+        print("Using ResNet50")
+        model = models.ResNet.resnet50_sepfc_us(
+                pretrained=True,
+                num_classes=2,
+                env_num=env_num)
     else:
         print("Using ResNet18")
         model = models.ResNet.resnet18_sepfc_us(

@@ -20,7 +20,8 @@ def parse_args():
                                  "PACS_FROM_DOMAINBED", 
                                  "VLCS_FROM_DOMAINBED", 
                                  "DomainNet_FROM_DOMAINBED", 
-                                 "TerraIncognita_FROM_DOMAINBED"])
+                                 "TerraIncognita_FROM_DOMAINBED",
+                                 "Camelyon_FROM_DOMAINBED"])
 
     parser.add_argument('--epochs', type=int, default=200)
 
