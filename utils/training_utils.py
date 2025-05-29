@@ -35,7 +35,7 @@ def get_optimizer_scheduler(model, args):
                                                             )
         else:
             scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,
-                                                            milestones=[int(0.75 * args.epochs)],
+                                                            milestones=[int(1 * args.epochs)],
                                                             gamma=gamma
                                                             )
         print("lr: ", optimizer.param_groups[0]["lr"])
