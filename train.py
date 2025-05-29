@@ -79,7 +79,7 @@ def main():
                 env_num=env_num)
     elif args.dataset == "TerraIncognita_FROM_DOMAINBED":
         print("Using ResNet50")
-        model = models.ResNet.resnet50_sepfc_us(
+        model = models.ResNet.resnet18_sepfc_us(
                 pretrained=True,
                 num_classes=10,
                 env_num=env_num)   
