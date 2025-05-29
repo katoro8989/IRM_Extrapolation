@@ -7,6 +7,9 @@ import torch.nn as nn
 from typing import Tuple
 import numpy as np
 
+from backpack import backpack, extend
+from backpack.extensions import BatchGrad
+
 from utils.optim_utils import LARS
 from utils.calibration_metrics import CalibrationMetric
 from models.EBD import EBD
@@ -155,6 +158,111 @@ def penalty_stationary(model, x, y, env_num):
     for param in model.phi.parameters():
         param.requires_grad_(True)
     return torch.sum(grad.view(-1) ** 2)
+
+def penalty_fishr(logits, y, len_minibatches, optimizer, model, num_domains, ema_per_domain):
+    dict_grads = _get_grads(logits, y, optimizer, model)
+    grads_var_per_domain = _get_grads_var_per_domain(dict_grads, len_minibatches, num_domains, ema_per_domain)
+    return _compute_distance_grads_var(grads_var_per_domain, num_domains)
+
+def _get_grads(logits, y, optimizer, model):
+    bce_extended = extend(nn.CrossEntropyLoss(reduction='none'))
+    classifier = model.omega_list[0]
+    optimizer.zero_grad()
+    loss = bce_extended(logits, y).sum()
+    with backpack(BatchGrad()):
+        loss.backward(
+            inputs=list(classifier.parameters()), retain_graph=True, create_graph=True
+        )
+
+    # compute individual grads for all samples across all domains simultaneously
+    dict_grads = OrderedDict(
+        [
+            (name, weights.grad_batch.clone().view(weights.grad_batch.size(0), -1))
+            for name, weights in classifier.named_parameters()
+        ]
+    )
+    return dict_grads
+
+def _get_grads_var_per_domain(dict_grads, len_minibatches, num_domains, ema_per_domain):
+    # grads var per domain
+    grads_var_per_domain = [{} for _ in range(num_domains)]
+    for name, _grads in dict_grads.items():
+        all_idx = 0
+        for domain_id, bsize in enumerate(len_minibatches):
+            env_grads = _grads[all_idx:all_idx + bsize]
+            all_idx += bsize
+            env_mean = env_grads.mean(dim=0, keepdim=True)
+            env_grads_centered = env_grads - env_mean
+            grads_var_per_domain[domain_id][name] = (env_grads_centered).pow(2).mean(dim=0)
+
+    # moving average
+    for domain_id in range(num_domains):
+        grads_var_per_domain[domain_id] = ema_per_domain[domain_id].update(
+            grads_var_per_domain[domain_id]
+        )
+
+    return grads_var_per_domain
+
+def _compute_distance_grads_var(grads_var_per_domain, num_domains):
+
+    # compute gradient variances averaged across domains
+    grads_var = OrderedDict(
+        [
+            (
+                name,
+                torch.stack(
+                    [
+                        grads_var_per_domain[domain_id][name]
+                        for domain_id in range(num_domains)
+                    ],
+                    dim=0
+                ).mean(dim=0)
+            )
+            for name in grads_var_per_domain[0].keys()
+        ]
+    )
+
+    penalty = 0
+    for domain_id in range(num_domains):
+        penalty += l2_between_dicts(grads_var_per_domain[domain_id], grads_var)
+    return penalty / num_domains
+
+def l2_between_dicts(dict_1, dict_2):
+    assert len(dict_1) == len(dict_2)
+    dict_1_values = [dict_1[key] for key in sorted(dict_1.keys())]
+    dict_2_values = [dict_2[key] for key in sorted(dict_1.keys())]
+    return (
+        torch.cat(tuple([t.view(-1) for t in dict_1_values])) -
+        torch.cat(tuple([t.view(-1) for t in dict_2_values]))
+    ).pow(2).mean()
+
+class MovingAverage:
+
+    def __init__(self, ema, oneminusema_correction=True):
+        self.ema = ema
+        self.named_parameters = {}
+        self._updates = 0
+        self._oneminusema_correction = oneminusema_correction
+
+    def update(self, dict_data):
+        ema_dict_data = {}
+        for name, data in dict_data.items():
+            data = data.view(1, -1)
+            if self._updates == 0:
+                previous_data = torch.zeros_like(data)
+            else:
+                previous_data = self.named_parameters[name]
+
+            ema_data = self.ema * previous_data + (1 - self.ema) * data
+            if self._oneminusema_correction:
+                ema_dict_data[name] = ema_data / (1 - self.ema)
+            else:
+                ema_dict_data[name] = ema_data
+            self.named_parameters[name] = ema_data.clone().detach()
+
+        self._updates += 1
+        return ema_dict_data
+    
 
 def init_config():
     """Initializer of Configration for CalibrationMetric."""
