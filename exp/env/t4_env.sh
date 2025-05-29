@@ -1,5 +1,5 @@
 # Pyenv VirtualEnv Environment
-PYTHON_PATH="/home/3/uy02093/env/py3918/bin"
+PYTHON_PATH="/gs/bs/tge-24IJ0078/env/py3918/bin"
 export PYTHON_PATH
 
 # Cluster
