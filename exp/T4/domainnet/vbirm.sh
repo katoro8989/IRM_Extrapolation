@@ -12,7 +12,7 @@ TRAINING_COLOR_ENV=""
 TEST_ENV=0
 LABEL_FLIP_P=0.25
 WD=0.0
-PENALTY_WEIGHT=0
+PENALTY_WEIGHT=1
 LR=5e-5
 WARM_START=0
 OMEGA_LR=0.002
@@ -28,9 +28,11 @@ PRIOR_SD_COEF=1000
 DATA_NUM=8321
 
 LAMBDA=(1e-3 1e-2 1e-1 1e0 1e1)
+VAR_BETAS=(1e-1 2e-1 3e-1 4e-1 5e-1 6e-1 7e-1 8e-1 9e-1)
+
 count=0
 
-for lambda in "${LAMBDA[@]}" ; do
+for var_beta in "${VAR_BETAS[@]}" ; do
     SHELL_ARGS="--dataset ${DATASET} \
                 --epochs ${EPOCHS} \
                 --train_batch_size ${TRAIN_BATCH_SIZE} \
@@ -42,7 +44,7 @@ for lambda in "${LAMBDA[@]}" ; do
                 --training_env ${TRAINING_ENV} \
                 --test_env ${TEST_ENV} \
                 --wd ${WD} \
-                --penalty_weight ${lambda} \
+                --penalty_weight ${PENALTY_WEIGHT} \
                 --lr ${LR} \
                 --warm_start ${WARM_START} \
                 --omega_lr ${OMEGA_LR} \
@@ -50,6 +52,7 @@ for lambda in "${LAMBDA[@]}" ; do
                 --wandb_project_name ${WANDB_PROJECT_NAME} \
                 --arch "resnet50" \
                 --num_classes ${NUM_CLASSES} \
+                --var_beta ${var_beta} \
                 --prior_sd_coef ${PRIOR_SD_COEF} \
                 --data_num ${DATA_NUM}"
 
