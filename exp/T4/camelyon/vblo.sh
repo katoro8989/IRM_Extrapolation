@@ -1,38 +1,39 @@
-DATASET="PACS_FROM_DOMAINBED"
-EPOCHS=200
+DATASET="CAMELYON_FROM_DOMAINBED"
+ARCH="resnet50"
+EPOCHS=10
 TRAIN_BATCH_SIZE=32
 SEED=2020
 TRAINER="vBLO"
 DATA_DIR="/gs/bs/tge-24IJ0078/dataset"
 OPTIM="adam"
-TRAINING_ENV="0 1 3"
+TRAINING_ENV="1 2 3 4"
 TRAINING_CLASS_ENV=""
 TRAINING_COLOR_ENV=""
-TEST_ENV=2
+TEST_ENV=0
 LABEL_FLIP_P=0.25
-WD=0.00110794568
-PENALTY_WEIGHT=1
-LR=5e-4
-WARM_START=50
-OMEGA_LR=5e-4
+WD=0.0
+PENALTY_WEIGHT=0.01
+LR=5e-5
+WARM_START=0
+OMEGA_LR=5e-5
 PRINT_FREQ=100
 RESULT_DIR="./results"
 GPU="0"
 NO_CUDA=""
-WANDB_PROJECT_NAME="vBLO_PACS"
-NUM_CLASSES=7
+WANDB_PROJECT_NAME="vBLO_CAMELYON"
+NUM_CLASSES=2
+SEED=2021
 
-SEEDS=(2021 2022)
-VAR_BETAS=(1e-1 2e-1 4e-1 5e-1 7e-1 8e-1)
-var_beta=0.4
-LRS=(0.1)
+LAMBDA=(1e-3 1e-2 1e-1 1e0 1e1)
+VAR_BETAS=(1e-1 2e-1 3e-1 4e-1 5e-1 6e-1 7e-1 8e-1 9e-1)
+
 count=0
 
-for seed in "${SEEDS[@]}" ; do
+for var_beta in "${VAR_BETAS[@]}" ; do
     SHELL_ARGS="--dataset ${DATASET} \
                 --epochs ${EPOCHS} \
                 --train_batch_size ${TRAIN_BATCH_SIZE} \
-                --seed ${seed} \
+                --seed ${SEED} \
                 --trainer ${TRAINER} \
                 --data_dir ${DATA_DIR} \
                 --optim ${OPTIM} \
@@ -46,11 +47,12 @@ for seed in "${SEEDS[@]}" ; do
                 --omega_lr ${OMEGA_LR} \
                 --print_freq ${PRINT_FREQ} \
                 --wandb_project_name ${WANDB_PROJECT_NAME} \
+                --arch "resnet50" \
                 --num_classes ${NUM_CLASSES} \
                 --var_beta ${var_beta} \
                 "
 
-    CMD="qsub -g tge-24IJ0078 run.sh ${SHELL_ARGS}"
+    CMD="qsub -g tga-SlavakisLab run.sh ${SHELL_ARGS}"
     echo "Exp-$((count + 1)): ${CMD}"
     eval $CMD
 
