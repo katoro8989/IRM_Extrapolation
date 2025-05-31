@@ -25,7 +25,7 @@ NUM_CLASSES=345
 SEED=2021
 
 LAMBDA=(1e-3 1e-2 1e-1 1e0 1e1)
-ALPHA_MM=(-0.1 -0.2 -0.3 -0.4 -0.5 -0.6 -0.7 -0.8 -0.9 -1.0)
+ALPHA_MM=(-0.7)
 
 count=0
 
