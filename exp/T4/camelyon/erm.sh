@@ -23,7 +23,7 @@ NO_CUDA=""
 WANDB_PROJECT_NAME="ERM_CAMELYON"
 NUM_CLASSES=2
 
-SEEDS=(2021)
+SEEDS=(2022 2023)
 count=0
 
 for seed in "${SEEDS[@]}" ; do

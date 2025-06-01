@@ -29,14 +29,16 @@ DATA_NUM=8321
 
 LAMBDA=(1e-3 1e-2 1e-1 1e0 1e1)
 VAR_BETAS=(1e-1 2e-1 3e-1 4e-1 5e-1 6e-1 7e-1 8e-1 9e-1)
+VAR_BETA=3e-1
+SEEDS=(2022 2023)
 
 count=0
 
-for var_beta in "${VAR_BETAS[@]}" ; do
+for seed in "${SEEDS[@]}" ; do
     SHELL_ARGS="--dataset ${DATASET} \
                 --epochs ${EPOCHS} \
                 --train_batch_size ${TRAIN_BATCH_SIZE} \
-                --seed ${SEED} \
+                --seed ${seed} \
                 --trainer ${TRAINER} \
                 --data_dir ${DATA_DIR} \
                 --optim ${OPTIM} \
@@ -52,7 +54,7 @@ for var_beta in "${VAR_BETAS[@]}" ; do
                 --wandb_project_name ${WANDB_PROJECT_NAME} \
                 --arch "resnet50" \
                 --num_classes ${NUM_CLASSES} \
-                --var_beta ${var_beta} \
+                --var_beta ${VAR_BETA} \
                 --prior_sd_coef ${PRIOR_SD_COEF} \
                 --data_num ${DATA_NUM}"
 

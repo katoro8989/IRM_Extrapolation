@@ -26,14 +26,16 @@ SEED=2021
 
 LAMBDA=(1e-3 1e-2 1e-1 1e0 1e1)
 ALPHA_MM=(-0.1 -0.2 -0.3 -0.4 -0.5 -0.6 -0.7 -0.8 -0.9 -1.0)
+ALPHA_MM=-0.2
+SEEDS=(2022 2023)
 
 count=0
 
-for alpha_mm in "${ALPHA_MM[@]}" ; do
+for seed in "${SEEDS[@]}" ; do
     SHELL_ARGS="--dataset ${DATASET} \
                 --epochs ${EPOCHS} \
                 --train_batch_size ${TRAIN_BATCH_SIZE} \
-                --seed ${SEED} \
+                --seed ${seed} \
                 --trainer ${TRAINER} \
                 --data_dir ${DATA_DIR} \
                 --optim ${OPTIM} \
@@ -49,7 +51,7 @@ for alpha_mm in "${ALPHA_MM[@]}" ; do
                 --wandb_project_name ${WANDB_PROJECT_NAME} \
                 --arch "resnet50" \
                 --num_classes ${NUM_CLASSES} \
-                --alpha_mm ${alpha_mm} \
+                --alpha_mm ${ALPHA_MM} \
                 "
 
     CMD="qsub -g tga-SlavakisLab run.sh ${SHELL_ARGS}"
