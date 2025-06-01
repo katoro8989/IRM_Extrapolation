@@ -25,7 +25,7 @@ NUM_CLASSES=2
 SEED=2021
 
 LAMBDA=(1e-3 1e-2 1e-1 1e0 1e1)
-VAR_BETAS=(1e-1 2e-1 3e-1 4e-1 5e-1 6e-1 7e-1 8e-1 9e-1)
+VAR_BETAS=(3e-1)
 
 count=0
 
